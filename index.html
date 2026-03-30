@@ -847,40 +847,70 @@
                 <div class="course">MA214 · Bentley</div>
                 <div class="title">Study App</div>
             </div>
+
             <div class="sidebar-section">
                 <div class="sidebar-label">Midterm Review</div>
-                <div class="nav-item" onclick="go('ch89')" id="nav-ch89"><span class="ch-num">8–9</span> CI &amp; Hyp
-                    Tests <span class="badge badge-mid">mid</span></div>
-                <div class="nav-item" onclick="go('ch10')" id="nav-ch10"><span class="ch-num">10</span> Two Populations
-                    <span class="badge badge-mid">mid</span></div>
-                <div class="nav-item" onclick="go('ch11')" id="nav-ch11"><span class="ch-num">11</span> Variance Tests
-                    <span class="badge badge-mid">mid</span></div>
-                <div class="nav-item" onclick="go('ch12')" id="nav-ch12"><span class="ch-num">12</span> Chi-Square <span
-                        class="badge badge-mid">mid</span></div>
+                <div class="nav-item" onclick="go('ch89')" id="nav-ch89">
+                    <span class="ch-num">8–9</span> CI &amp; Hyp Tests
+                    <span class="badge badge-mid">mid</span>
+                </div>
+                <div class="nav-item" onclick="go('ch10')" id="nav-ch10">
+                    <span class="ch-num">10</span> Two Populations
+                    <span class="badge badge-mid">mid</span>
+                </div>
+                <div class="nav-item" onclick="go('ch11')" id="nav-ch11">
+                    <span class="ch-num">11</span> Variance Tests
+                    <span class="badge badge-mid">mid</span>
+                </div>
+                <div class="nav-item" onclick="go('ch12')" id="nav-ch12">
+                    <span class="ch-num">12</span> Chi-Square
+                    <span class="badge badge-mid">mid</span>
+                </div>
             </div>
+
             <div class="sidebar-section">
                 <div class="sidebar-label">Final Focus</div>
-                <div class="nav-item" onclick="go('ch13')" id="nav-ch13"><span class="ch-num">13</span> ANOVA <span
-                        class="badge badge-final">final</span></div>
-                <div class="nav-item" onclick="go('ch1415')" id="nav-ch1415"><span class="ch-num">14–15</span>
-                    Regression <span class="badge badge-final">final</span></div>
-                <div class="nav-item" onclick="go('ch20')" id="nav-ch20"><span class="ch-num">20</span> Non-Parametric
-                    <span class="badge badge-final">final</span></div>
+                <div class="nav-item" onclick="go('ch13')" id="nav-ch13">
+                    <span class="ch-num">13</span> ANOVA
+                    <span class="badge badge-final">final</span>
+                </div>
+                <div class="nav-item" onclick="go('ch1415')" id="nav-ch1415">
+                    <span class="ch-num">14–15</span> Regression
+                    <span class="badge badge-final">final</span>
+                </div>
+                <div class="nav-item" onclick="go('ch20')" id="nav-ch20">
+                    <span class="ch-num">20</span> Non-Parametric
+                    <span class="badge badge-final">final</span>
+                </div>
             </div>
+
             <div class="sidebar-section">
                 <div class="sidebar-label">Tools</div>
-                <div class="nav-item" onclick="go('chooser')" id="nav-chooser"><span class="ch-num">⇄</span> Which Test?
+                <div class="nav-item" onclick="go('chooser')" id="nav-chooser">
+                    <span class="ch-num">⇄</span> Which Test?
                 </div>
-                <div class="nav-item" onclick="go('formulas')" id="nav-formulas"><span class="ch-num">∑</span> Formula
-                    Sheet</div>
-                <div class="nav-item" onclick="go('calc')" id="nav-calc"><span class="ch-num">∫</span> Calculator</div>
-                <div class="nav-item" onclick="go('flashcards')" id="nav-flashcards"><span class="ch-num">⟳</span>
-                    Flashcards</div>
-                <div class="nav-item" onclick="go('weakspots')" id="nav-weakspots"><span class="ch-num">!</span> Weak
-                    Spots</div>
+                <div class="nav-item" onclick="go('formulas')" id="nav-formulas">
+                    <span class="ch-num">∑</span> Formula Sheet
+                </div>
+                <div class="nav-item" onclick="go('calc')" id="nav-calc">
+                    <span class="ch-num">∫</span> Calculator
+                </div>
+                <div class="nav-item" onclick="go('flashcards')" id="nav-flashcards">
+                    <span class="ch-num">⟳</span> Flashcards
+                </div>
+                <div class="nav-item" onclick="go('weakspots')" id="nav-weakspots">
+                    <span class="ch-num">!</span> Weak Spots
+                </div>
+                <div class="nav-item" onclick="go('glossary')" id="nav-glossary">
+                    <span class="ch-num">α</span> Variable Index
+                </div>
             </div>
+
             <div class="sidebar-bottom">
-                <div class="progress-label"><span>Quiz progress</span><span id="progress-pct">0%</span></div>
+                <div class="progress-label">
+                    <span>Quiz progress</span>
+                    <span id="progress-pct">0%</span>
+                </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill" style="width:0%"></div>
                 </div>
@@ -2677,6 +2707,564 @@
                 </div>
             </div>
 
+
+            <!-- GLOSSARY -->
+            <div class="ch-page" id="glossary">
+                <div class="main-header">
+                    <div class="ch-label">Tool</div>
+                    <h1>Variable Index</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('glossary','symbols',this)">Symbols</button>
+                        <button class="tab-btn" onclick="swTab('glossary','df',this)">All df Formulas</button>
+                        <button class="tab-btn" onclick="swTab('glossary','decisions',this)">Decision Rules</button>
+                    </div>
+                </div>
+                <div class="main-content">
+            
+                    <div class="pane active" id="glossary-symbols">
+                        <div style="margin-bottom:16px;position:relative;">
+                            <input type="text" id="gloss-search" placeholder="Search symbol or meaning..."
+                                oninput="filterGlossary()"
+                                style="width:100%;padding:9px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+                        </div>
+            
+                        <table class="tbl" id="gloss-table">
+                            <tr>
+                                <th style="width:80px">Symbol</th>
+                                <th style="width:220px">Meaning</th>
+                                <th>Context / Notes</th>
+                                <th style="width:60px">Ch</th>
+                            </tr>
+            
+                            <!-- Greek letters -->
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">μ</td>
+                                <td>Population mean</td>
+                                <td>The true unknown average we're trying to estimate or test. Never known exactly — we estimate it
+                                    with x̄.</td>
+                                <td>8–9</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">μ₀</td>
+                                <td>Hypothesized population mean</td>
+                                <td>The specific value of μ stated in H₀. Used in the denominator of the t test statistic.</td>
+                                <td>9</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">μ_d</td>
+                                <td>Population mean of differences</td>
+                                <td>Used in paired t-test. H₀: μ_d = 0 means no difference on average.</td>
+                                <td>10.2</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">σ</td>
+                                <td>Population standard deviation</td>
+                                <td>Almost always unknown. If known → use z. If unknown → use t.</td>
+                                <td>8–9</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">σ²</td>
+                                <td>Population variance</td>
+                                <td>The true spread of the population. Tested with χ² (one variance) or F-test (two variances).</td>
+                                <td>11</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">σ²₀</td>
+                                <td>Hypothesized population variance</td>
+                                <td>The specific value of σ² stated in H₀ for the chi-square variance test.</td>
+                                <td>11</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">α</td>
+                                <td>Significance level</td>
+                                <td>Probability of Type I error. Usually 0.05. You set this before running the test. Reject H₀ when
+                                    p-value &lt; α.</td>
+                                <td>All</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">β</td>
+                                <td>Probability of Type II error</td>
+                                <td>Failing to reject H₀ when it's false. Harder to control. Not directly set by you.</td>
+                                <td>9</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">β₀</td>
+                                <td>True population intercept</td>
+                                <td>The y-intercept in the true regression model y = β₀ + β₁x + ε. Estimated by b₀.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">β₁</td>
+                                <td>True population slope</td>
+                                <td>The slope in the true regression model. H₀: β₁=0 means x has no linear relationship with y.
+                                    Estimated by b₁.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">ε</td>
+                                <td>Error term (regression)</td>
+                                <td>The random noise in y = β₀ + β₁x + ε. Assumed normally distributed with mean 0.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--green)">χ²</td>
+                                <td>Chi-square test statistic</td>
+                                <td>Used for variance tests (Ch 11) and goodness-of-fit / independence tests (Ch 12). Always
+                                    positive, right-skewed.</td>
+                                <td>11–12</td>
+                            </tr>
+            
+                            <!-- Latin letters -->
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">x̄</td>
+                                <td>Sample mean</td>
+                                <td>Average of your sample data. Point estimate for μ. Used in every t-test and CI for the mean.
+                                </td>
+                                <td>All</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">s</td>
+                                <td>Sample standard deviation</td>
+                                <td>Measure of spread in your sample. Used in SE = s/√n. Square it to get s².</td>
+                                <td>All</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">s²</td>
+                                <td>Sample variance</td>
+                                <td>Square of sample std dev. Used to test σ². In ANOVA, each group has its own s².</td>
+                                <td>All</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">s_d</td>
+                                <td>Std dev of differences</td>
+                                <td>Standard deviation of the dᵢ values in a paired t-test. Not the same as s for either group.</td>
+                                <td>10.2</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">s_e</td>
+                                <td>Standard error of the regression</td>
+                                <td>s_e = √MSE = √(SSE/(n−2)). Average residual size in original units. Smaller = better fit.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">n</td>
+                                <td>Sample size</td>
+                                <td>Total number of observations. In paired t-test, n = number of PAIRS not total obs. In ANOVA, n =
+                                    grand total.</td>
+                                <td>All</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">p</td>
+                                <td>Population proportion</td>
+                                <td>True proportion in the population. Unknown. Estimated by p̄.</td>
+                                <td>9, 10.3</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">p̄</td>
+                                <td>Sample proportion</td>
+                                <td>x/n where x = number of successes. Point estimate for p.</td>
+                                <td>9, 10.3</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">p₀</td>
+                                <td>Hypothesized proportion</td>
+                                <td>The value of p stated in H₀. Used in denominator of z-test for proportion.</td>
+                                <td>9</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">p̄_c</td>
+                                <td>Pooled proportion</td>
+                                <td>(x₁+x₂)/(n₁+n₂). Used ONLY in two-proportion z-test under H₀: p₁=p₂. NOT used for CI.</td>
+                                <td>10.3</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">t</td>
+                                <td>t test statistic</td>
+                                <td>Number of standard errors x̄ is from μ₀. Follows t-distribution with df = n−1 (one-sample).</td>
+                                <td>9–10</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">z</td>
+                                <td>z test statistic / critical value</td>
+                                <td>Standard normal. Used when σ known or for proportions. Key values: 1.645 (90%), 1.96 (95%),
+                                    2.576 (99%).</td>
+                                <td>8–9</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">F</td>
+                                <td>F test statistic</td>
+                                <td>Ratio of two variances or two mean squares. F = s²₁/s²₂ (variance test) or MSA/MSE (ANOVA).
+                                    Always positive.</td>
+                                <td>11–13</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">df</td>
+                                <td>Degrees of freedom</td>
+                                <td>Controls the shape of t, χ², and F distributions. Formula differs by test — see the df tab.</td>
+                                <td>All</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">d̄</td>
+                                <td>Mean of differences</td>
+                                <td>Average of dᵢ = x₁ᵢ − x₂ᵢ values. Used as the numerator in paired t-test.</td>
+                                <td>10.2</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--blue)">dᵢ</td>
+                                <td>Individual difference (paired)</td>
+                                <td>dᵢ = x₁ᵢ − x₂ᵢ for each matched pair. If dᵢ = 0, drop it in Wilcoxon Signed-Rank.</td>
+                                <td>10.2, 20.2</td>
+                            </tr>
+            
+                            <!-- ANOVA -->
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">k</td>
+                                <td>Number of groups</td>
+                                <td>In One-Way ANOVA. df_A = k−1, df_E = n−k. Also used in Kruskal-Wallis: H ~ χ²(k−1).</td>
+                                <td>13, 20.3</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">r</td>
+                                <td>Number of rows</td>
+                                <td>In Two-Way ANOVA. df_rows = r−1.</td>
+                                <td>13</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">c</td>
+                                <td>Number of columns</td>
+                                <td>In Two-Way ANOVA. df_cols = c−1.</td>
+                                <td>13</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">w</td>
+                                <td>Observations per cell</td>
+                                <td>In Two-Way ANOVA with interaction. w=1 → randomized block (no interaction). w≥2 → can test
+                                    interaction.</td>
+                                <td>13</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">SST</td>
+                                <td>Total sum of squares</td>
+                                <td>Total variation in y. SST = SSA + SSE (ANOVA) or SST = SSR + SSE (regression).</td>
+                                <td>13–14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">SSA</td>
+                                <td>Sum of squares between groups</td>
+                                <td>Variation explained by the factor (between groups). Also called SSR in some ANOVA tables.</td>
+                                <td>13</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">SSE</td>
+                                <td>Sum of squares error (within)</td>
+                                <td>Unexplained variation within groups. In regression it's the residual sum of squares Σ(yᵢ−ŷᵢ)².
+                                </td>
+                                <td>13–14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">MSA</td>
+                                <td>Mean square between groups</td>
+                                <td>MSA = SSA / df_A. Numerator of F in One-Way ANOVA.</td>
+                                <td>13</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--amber)">MSE</td>
+                                <td>Mean square error</td>
+                                <td>MSE = SSE / df_E. Denominator of F in ANOVA. Also = s_e² in regression.</td>
+                                <td>13–14</td>
+                            </tr>
+            
+                            <!-- Regression -->
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">b₀</td>
+                                <td>Sample intercept (regression)</td>
+                                <td>Estimated y-intercept. b₀ = ȳ − b₁x̄. Value of ŷ when x=0.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">b₁</td>
+                                <td>Sample slope (regression)</td>
+                                <td>b₁ = Σ[(xᵢ−x̄)(yᵢ−ȳ)] / Σ[(xᵢ−x̄)²]. For every 1-unit increase in x, y changes by b₁ on average.
+                                </td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">ŷ</td>
+                                <td>Predicted y value</td>
+                                <td>ŷ = b₀ + b₁x. The fitted value from the regression line. Residual = yᵢ − ŷᵢ.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">SSR</td>
+                                <td>Sum of squares regression</td>
+                                <td>Variation in y explained by the model. SSR = Σ(ŷᵢ−ȳ)². R² = SSR/SST.</td>
+                                <td>14</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">R²</td>
+                                <td>Coefficient of determination</td>
+                                <td>% of variation in y explained by the model. Range 0–1. Always increases when adding predictors —
+                                    use Adj R² to compare models.</td>
+                                <td>14–15</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">r</td>
+                                <td>Correlation coefficient</td>
+                                <td>Measures direction and strength of linear relationship. Range −1 to +1. r² = R². Don't confuse
+                                    with r = rows in ANOVA.</td>
+                                <td>14</td>
+                            </tr>
+            
+                            <!-- Chi-square / nonpara -->
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">O</td>
+                                <td>Observed count</td>
+                                <td>Actual count in a cell/category from your data. Used in χ² = Σ(O−E)²/E.</td>
+                                <td>12</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">E</td>
+                                <td>Expected count</td>
+                                <td>Count predicted under H₀. For independence: E_ij = (Row total × Col total)/n. Must all be ≥ 5.
+                                </td>
+                                <td>12</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">T</td>
+                                <td>Wilcoxon test statistic</td>
+                                <td>Sum of ranks for smaller sample (Rank-Sum) or min(T⁺,T⁻) (Signed-Rank). Compared to Wilcoxon
+                                    table, not t or F table.</td>
+                                <td>20.1–20.2</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">T⁺</td>
+                                <td>Sum of positive ranks</td>
+                                <td>In Wilcoxon Signed-Rank: sum of ranks where dᵢ &gt; 0.</td>
+                                <td>20.2</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">T⁻</td>
+                                <td>Sum of negative ranks</td>
+                                <td>In Wilcoxon Signed-Rank: sum of ranks where dᵢ &lt; 0. T = min(T⁺, T⁻).</td>
+                                <td>20.2</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">H</td>
+                                <td>Kruskal-Wallis test statistic</td>
+                                <td>H = [12/n(n+1)] × Σ(Rⱼ²/nⱼ) − 3(n+1). Follows χ²(k−1). Only non-parametric test using chi-square
+                                    table.</td>
+                                <td>20.3</td>
+                            </tr>
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--red)">Rⱼ</td>
+                                <td>Sum of ranks for group j</td>
+                                <td>Used in Kruskal-Wallis formula. Rank all observations together, then sum by group.</td>
+                                <td>20.3</td>
+                            </tr>
+                        </table>
+                    </div>
+            
+                    <div class="pane" id="glossary-df">
+                        <div class="hl" style="margin-bottom:16px">
+                            <p>df controls the critical value you look up. Getting df wrong = looking up the wrong critical value =
+                                wrong decision. Memorize these.</p>
+                        </div>
+                        <table class="tbl">
+                            <tr>
+                                <th>Test</th>
+                                <th>df formula</th>
+                                <th>Watch out for</th>
+                            </tr>
+                            <tr>
+                                <td>One-sample t-test</td>
+                                <td>n − 1</td>
+                                <td>n is your sample size</td>
+                            </tr>
+                            <tr>
+                                <td>Paired t-test</td>
+                                <td>n − 1</td>
+                                <td>n = number of PAIRS, not total observations</td>
+                            </tr>
+                            <tr>
+                                <td>Two-sample t (Welch)</td>
+                                <td>Satterthwaite formula</td>
+                                <td>R computes this — don't calculate by hand</td>
+                            </tr>
+                            <tr>
+                                <td>Chi-square (1 variance)</td>
+                                <td>n − 1</td>
+                                <td>Same formula as one-sample t, different distribution</td>
+                            </tr>
+                            <tr>
+                                <td>F-test (2 variances)</td>
+                                <td>df₁ = n₁−1, df₂ = n₂−1</td>
+                                <td>Two separate df values — order matters for table lookup</td>
+                            </tr>
+                            <tr>
+                                <td>Chi-square GOF</td>
+                                <td>k − 1</td>
+                                <td>k = number of categories</td>
+                            </tr>
+                            <tr>
+                                <td>Chi-square independence</td>
+                                <td>(rows−1)(cols−1)</td>
+                                <td>Multiply, don't add</td>
+                            </tr>
+                            <tr>
+                                <td>One-Way ANOVA — Factor A</td>
+                                <td>k − 1</td>
+                                <td>k = number of groups</td>
+                            </tr>
+                            <tr>
+                                <td>One-Way ANOVA — Error</td>
+                                <td>n − k</td>
+                                <td>n = total obs across all groups</td>
+                            </tr>
+                            <tr>
+                                <td>One-Way ANOVA — Total</td>
+                                <td>n − 1</td>
+                                <td>Always check: df_A + df_E = df_T</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Rows (B)</td>
+                                <td>r − 1</td>
+                                <td>r = number of row levels</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Cols (A)</td>
+                                <td>c − 1</td>
+                                <td>c = number of column levels</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Interaction</td>
+                                <td>(r−1)(c−1)</td>
+                                <td>Same formula as chi-square independence — different context</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Error (w≥2)</td>
+                                <td>rc(w−1)</td>
+                                <td>w = obs per cell</td>
+                            </tr>
+                            <tr>
+                                <td>Randomized Block — Error (w=1)</td>
+                                <td>(r−1)(c−1)</td>
+                                <td>When w=1, interaction term doesn't exist — it becomes the error</td>
+                            </tr>
+                            <tr>
+                                <td>Simple regression — Error</td>
+                                <td>n − 2</td>
+                                <td>Lose 1 df for b₀ and 1 for b₁</td>
+                            </tr>
+                            <tr>
+                                <td>Multiple regression — Error</td>
+                                <td>n − k − 1</td>
+                                <td>k = number of predictors, not groups</td>
+                            </tr>
+                            <tr>
+                                <td>Kruskal-Wallis</td>
+                                <td>k − 1</td>
+                                <td>Uses chi-square table, not Wilcoxon table</td>
+                            </tr>
+                        </table>
+                    </div>
+            
+                    <div class="pane" id="glossary-decisions">
+                        <div class="hl" style="margin-bottom:16px">
+                            <p>Every test in this course follows the same decision rule — just the distribution and critical value
+                                changes.</p>
+                        </div>
+                        <table class="tbl">
+                            <tr>
+                                <th>Method</th>
+                                <th>Reject H₀ when...</th>
+                                <th>Notes</th>
+                            </tr>
+                            <tr>
+                                <td>p-value method</td>
+                                <td>p-value &lt; α</td>
+                                <td>Works for all tests. Most common on exams with R output.</td>
+                            </tr>
+                            <tr>
+                                <td>Critical value (two-tailed)</td>
+                                <td>|test stat| &gt; critical value</td>
+                                <td>Compare absolute value of stat to positive critical value</td>
+                            </tr>
+                            <tr>
+                                <td>Critical value (right-tailed)</td>
+                                <td>test stat &gt; critical value</td>
+                                <td>Chi-square is always right-tailed. F-test in ANOVA is always right-tailed.</td>
+                            </tr>
+                            <tr>
+                                <td>Critical value (left-tailed)</td>
+                                <td>test stat &lt; −(critical value)</td>
+                                <td>Negative critical value for left-tail t-tests</td>
+                            </tr>
+                        </table>
+                        <div class="card" style="margin-top:16px">
+                            <h3>Conclusion language — exactly how to write it</h3>
+                            <table class="tbl" style="margin-top:8px">
+                                <tr>
+                                    <th>Decision</th>
+                                    <th>Correct wording</th>
+                                    <th>Never say</th>
+                                </tr>
+                                <tr>
+                                    <td>Reject H₀</td>
+                                    <td>"There is sufficient statistical evidence at the α=0.05 level to conclude [Hₐ]"</td>
+                                    <td>"H₀ is false" or "We proved Hₐ"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fail to reject H₀</td>
+                                    <td>"There is insufficient statistical evidence at the α=0.05 level to conclude [Hₐ]"</td>
+                                    <td>"H₀ is true" or "We accept H₀"</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Which table to use</h3>
+                            <table class="tbl" style="margin-top:8px">
+                                <tr>
+                                    <th>Distribution</th>
+                                    <th>When</th>
+                                    <th>Table</th>
+                                </tr>
+                                <tr>
+                                    <td>z (standard normal)</td>
+                                    <td>σ known, or proportion tests</td>
+                                    <td>Standard Normal Table</td>
+                                </tr>
+                                <tr>
+                                    <td>t</td>
+                                    <td>σ unknown (almost always)</td>
+                                    <td>t-Distribution Table — need df</td>
+                                </tr>
+                                <tr>
+                                    <td>χ² (chi-square)</td>
+                                    <td>Variance test, GOF, independence, Kruskal-Wallis</td>
+                                    <td>Chi-Square Table — need df</td>
+                                </tr>
+                                <tr>
+                                    <td>F</td>
+                                    <td>Two variances, ANOVA</td>
+                                    <td>F-Distribution Table — need df₁ AND df₂</td>
+                                </tr>
+                                <tr>
+                                    <td>Wilcoxon</td>
+                                    <td>Rank-Sum (20.1), Signed-Rank (20.2)</td>
+                                    <td>Wilcoxon Table — need n₁, n₂</td>
+                                </tr>
+                                <tr>
+                                    <td>Studentized range (q)</td>
+                                    <td>Tukey's HSD post-hoc test</td>
+                                    <td>q-Table — need k and df_E</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+            
+                </div>
+            </div>
+
         </div><!-- end .main -->
     </div><!-- end .layout -->
 
@@ -2693,6 +3281,13 @@
             if (id === 'weakspots') renderWeakSpots();
             if (id === 'flashcards') { initFlashcards(); renderDots(); showCard(); }
         }
+
+        function filterGlossary() {
+                const val = document.getElementById('gloss-search').value.toLowerCase();
+                document.querySelectorAll('#gloss-table .grow').forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(val) ? '' : 'none';
+                });
+            }
 
         function swTab(ch, pane, btn) {
             const page = document.getElementById(ch);
