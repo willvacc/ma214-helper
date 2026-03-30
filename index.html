@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA214 — Study App</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --surface: #161616;
+            --surface2: #1e1e1e;
+            --border: #2a2a2a;
+            --border2: #333;
+            --green: #4ade80;
+            --green-dim: #1a3a27;
+            --green-text: #86efac;
+            --amber: #fbbf24;
+            --amber-dim: #3a2a0a;
+            --red: #f87171;
+            --red-dim: #3a1a1a;
+            --blue: #60a5fa;
+            --purple: #a78bfa;
+            --text: #e5e5e5;
+            --text2: #999;
+            --text3: #666;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'Sora', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        /* LAYOUT */
+        .layout {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header .course {
+            font-size: 11px;
+            color: var(--text3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header .title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--green);
+            line-height: 1.3;
+        }
+
+        .sidebar-section {
+            padding: 12px 8px 4px;
+        }
+
+        .sidebar-label {
+            font-size: 10px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 8px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text2);
+            transition: all 0.15s;
+            font-weight: 400;
+        }
+
+        .nav-item:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--green-dim);
+            color: var(--green-text);
+            font-weight: 500;
+        }
+
+        .nav-item .ch-num {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text3);
+            min-width: 28px;
+        }
+
+        .nav-item.active .ch-num {
+            color: var(--green);
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            font-size: 9px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: var(--mono);
+        }
+
+        .badge-final {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .badge-mid {
+            background: #1a1a2e;
+            color: #818cf8;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .progress-label {
+            font-size: 11px;
+            color: var(--text3);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 3px;
+            background: var(--border2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 2px;
+            transition: width 0.5s;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            padding: 20px 28px 0;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            flex-shrink: 0;
+        }
+
+        .main-header .ch-label {
+            font-size: 10px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            font-family: var(--mono);
+        }
+
+        .main-header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tab-row {
+            display: flex;
+            gap: 2px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text3);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: var(--sans);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.15s;
+            font-weight: 400;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            color: var(--green);
+            border-bottom-color: var(--green);
+            font-weight: 500;
+        }
+
+        .main-content {
+            padding: 24px 28px;
+            flex: 1;
+        }
+
+        .pane {
+            display: none;
+        }
+
+        .pane.active {
+            display: block;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .card p,
+        .card li {
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text2);
+        }
+
+        .card ul {
+            padding-left: 1.2rem;
+            margin-top: 4px;
+        }
+
+        .card li {
+            margin-bottom: 3px;
+        }
+
+        .hl {
+            background: var(--green-dim);
+            border-left: 3px solid var(--green);
+            border-radius: 0 6px 6px 0;
+            padding: 10px 14px;
+            margin: 10px 0;
+        }
+
+        .hl p {
+            color: var(--green-text) !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+        }
+
+        .warn {
+            background: var(--amber-dim);
+            border-left: 3px solid var(--amber);
+            border-radius: 0 6px 6px 0;
+            padding: 10px 14px;
+            margin: 10px 0;
+        }
+
+        .warn p {
+            color: #fde68a !important;
+            font-size: 13px !important;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .grid3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* FORMULA */
+        .formula {
+            background: #0a0a0a;
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1.9;
+            color: #c9d1d9;
+            margin: 8px 0;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .formula .kw {
+            color: var(--green);
+        }
+
+        .formula .val {
+            color: var(--amber);
+        }
+
+        .formula .cm {
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        /* TABLE */
+        .tbl {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+
+        .tbl th {
+            background: var(--surface2);
+            color: var(--green-text);
+            padding: 7px 12px;
+            text-align: left;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tbl td {
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            color: var(--text2);
+        }
+
+        .tbl td:first-child {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .tbl tr:hover td {
+            background: var(--surface2);
+        }
+
+        /* TAG */
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-family: var(--mono);
+            font-weight: 500;
+            margin: 0 2px;
+            vertical-align: middle;
+        }
+
+        .tg {
+            background: var(--green-dim);
+            color: var(--green);
+        }
+
+        .ta {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .tb {
+            background: #0f1e33;
+            color: var(--blue);
+        }
+
+        .tp {
+            background: #1e1a33;
+            color: var(--purple);
+        }
+
+        .tr {
+            background: var(--red-dim);
+            color: var(--red);
+        }
+
+        /* QUIZ */
+        .quiz-wrap {
+            max-width: 680px;
+        }
+
+        .q-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 14px;
+        }
+
+        .q-item .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .q-num {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text3);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .q-opts button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 9px 14px;
+            margin: 5px 0;
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            background: var(--surface2);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: var(--sans);
+            color: var(--text2);
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+
+        .q-opts button:hover {
+            border-color: var(--green);
+            color: var(--text);
+        }
+
+        .q-opts button.ok {
+            background: var(--green-dim);
+            border-color: var(--green);
+            color: var(--green-text);
+        }
+
+        .q-opts button.no {
+            background: var(--red-dim);
+            border-color: var(--red);
+            color: #fca5a5;
+        }
+
+        .q-fb {
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .q-fb.show {
+            display: block;
+        }
+
+        .q-fb.ok {
+            background: var(--green-dim);
+            color: var(--green-text);
+            border-left: 3px solid var(--green);
+        }
+
+        .q-fb.no {
+            background: var(--red-dim);
+            color: #fca5a5;
+            border-left: 3px solid var(--red);
+        }
+
+        .quiz-score {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text2);
+        }
+
+        .quiz-score .score-num {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--green);
+        }
+
+        .quiz-score .score-label {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        .reset-btn {
+            margin-left: auto;
+            padding: 6px 14px;
+            border: 1px solid var(--border2);
+            border-radius: 5px;
+            background: transparent;
+            color: var(--text2);
+            cursor: pointer;
+            font-size: 11px;
+            font-family: var(--sans);
+            transition: all 0.15s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        /* STEPS */
+        .step {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .step-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--green-dim);
+            border: 1px solid var(--green);
+            color: var(--green);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-body {
+            flex: 1;
+        }
+
+        .step-body p {
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.6;
+        }
+
+        .step-body .formula {
+            margin-top: 6px;
+        }
+
+        .sec-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* PAGES */
+        .ch-page {
+            display: none;
+        }
+
+        .ch-page.active {
+            display: block;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 3px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+
+            .grid2,
+            .grid3 {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 180px;
+            }
+        }
+
+        /* CALCULATOR */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+            margin: 12px 0;
+        }
+
+        .calc-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .calc-field label {
+            font-size: 11px;
+            color: var(--text3);
+            font-family: var(--mono);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .calc-field input {
+            padding: 7px 10px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            transition: border-color 0.15s;
+        }
+
+        .calc-field input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+        .calc-btn {
+            padding: 8px 18px;
+            background: var(--green-dim);
+            border: 1px solid var(--green);
+            border-radius: 5px;
+            color: var(--green);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: var(--sans);
+            font-weight: 500;
+            transition: all 0.15s;
+            margin-top: 4px;
+        }
+
+        .calc-btn:hover {
+            background: var(--green);
+            color: #000;
+        }
+
+        .calc-output {
+            display: none;
+            margin-top: 12px;
+            background: #0a0a0a;
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            padding: 14px 18px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 2;
+            color: #c9d1d9;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .calc-output.show {
+            display: block;
+        }
+
+        /* FLASHCARDS */
+        .fc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-height: 260px;
+            padding: 32px 36px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: border-color 0.2s;
+            position: relative;
+        }
+
+        .fc-card:hover {
+            border-color: var(--border2);
+        }
+
+        .fc-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border2);
+            display: inline-block;
+            margin: 2px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .fc-dot.active {
+            background: var(--green);
+        }
+
+        .fc-dot.known {
+            background: var(--green-dim);
+            border: 1px solid var(--green);
+        }
+
+        .fc-dot.review {
+            background: var(--amber-dim);
+            border: 1px solid var(--amber);
+        }
+
+        .fc-nav-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text2);
+            cursor: pointer;
+            font-family: var(--sans);
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+
+        .fc-nav-btn:hover {
+            border-color: var(--text2);
+            color: var(--text);
+        }
+
+        .fc-know-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--green);
+            border-radius: 6px;
+            background: var(--green-dim);
+            color: var(--green);
+            cursor: pointer;
+            font-family: var(--sans);
+            font-size: 13px;
+        }
+
+        .fc-review-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--amber);
+            border-radius: 6px;
+            background: var(--amber-dim);
+            color: var(--amber);
+            cursor: pointer;
+            font-family: var(--sans);
+            font-size: 13px;
+        }
+
+        /* WEAK SPOTS */
+        .ws-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--red);
+        }
+
+        .ws-item .ws-ch {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: var(--mono);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .ws-item .ws-q {
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .ws-item .ws-ans {
+            font-size: 12px;
+            color: var(--red);
+            margin-bottom: 4px;
+        }
+
+        .ws-item .ws-correct {
+            font-size: 12px;
+            color: var(--green-text);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="course">MA214 · Bentley</div>
+                <div class="title">Study App</div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Midterm Review</div>
+                <div class="nav-item" onclick="go('ch89')" id="nav-ch89"><span class="ch-num">8–9</span> CI &amp; Hyp
+                    Tests <span class="badge badge-mid">mid</span></div>
+                <div class="nav-item" onclick="go('ch10')" id="nav-ch10"><span class="ch-num">10</span> Two Populations
+                    <span class="badge badge-mid">mid</span></div>
+                <div class="nav-item" onclick="go('ch11')" id="nav-ch11"><span class="ch-num">11</span> Variance Tests
+                    <span class="badge badge-mid">mid</span></div>
+                <div class="nav-item" onclick="go('ch12')" id="nav-ch12"><span class="ch-num">12</span> Chi-Square <span
+                        class="badge badge-mid">mid</span></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Final Focus</div>
+                <div class="nav-item" onclick="go('ch13')" id="nav-ch13"><span class="ch-num">13</span> ANOVA <span
+                        class="badge badge-final">final</span></div>
+                <div class="nav-item" onclick="go('ch1415')" id="nav-ch1415"><span class="ch-num">14–15</span>
+                    Regression <span class="badge badge-final">final</span></div>
+                <div class="nav-item" onclick="go('ch20')" id="nav-ch20"><span class="ch-num">20</span> Non-Parametric
+                    <span class="badge badge-final">final</span></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Tools</div>
+                <div class="nav-item" onclick="go('chooser')" id="nav-chooser"><span class="ch-num">⇄</span> Which Test?
+                </div>
+                <div class="nav-item" onclick="go('formulas')" id="nav-formulas"><span class="ch-num">∑</span> Formula
+                    Sheet</div>
+                <div class="nav-item" onclick="go('calc')" id="nav-calc"><span class="ch-num">∫</span> Calculator</div>
+                <div class="nav-item" onclick="go('flashcards')" id="nav-flashcards"><span class="ch-num">⟳</span>
+                    Flashcards</div>
+                <div class="nav-item" onclick="go('weakspots')" id="nav-weakspots"><span class="ch-num">!</span> Weak
+                    Spots</div>
+            </div>
+            <div class="sidebar-bottom">
+                <div class="progress-label"><span>Quiz progress</span><span id="progress-pct">0%</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <!-- CH 8-9 -->
+            <div class="ch-page active" id="ch89">
+                <div class="main-header">
+                    <div class="ch-label">Chapter 8–9</div>
+                    <h1>Confidence Intervals &amp; Hypothesis Tests</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch89','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch89','formulas',this)">Formulas</button>
+                        <button class="tab-btn" onclick="swTab('ch89','worked',this)">Worked Example</button>
+                        <button class="tab-btn" onclick="swTab('ch89','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch89-concepts">
+                        <div class="grid2">
+                            <div class="card">
+                                <h3>Confidence Interval — the big idea</h3>
+                                <p>You don't know the true population mean μ. You take a sample, compute x̄, and build a
+                                    range around it. That range is the CI — a bet that the true μ is somewhere inside.
+                                </p>
+                                <div class="hl">
+                                    <p>Structure: x̄ ± (critical value) × (standard error). Wider CI = less precise but
+                                        more confident.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3>σ known vs unknown</h3>
+                                <p><strong style="color:var(--blue)">σ known</strong> → use z (rare in
+                                    practice)<br><strong style="color:var(--green)">σ unknown</strong> → use t with df =
+                                    n−1 (almost always)</p>
+                                <p style="margin-top:8px">Key z values: 90% → 1.645 | 95% → 1.96 | 99% → 2.576</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Hypothesis Testing — 6 steps</h3>
+                            <div class="step">
+                                <div class="step-num">1</div>
+                                <div class="step-body">
+                                    <p><strong>State hypotheses</strong> — H₀ (null) and Hₐ (alternative)</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">2</div>
+                                <div class="step-body">
+                                    <p><strong>Set α</strong> — usually 0.05</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">3</div>
+                                <div class="step-body">
+                                    <p><strong>Compute test statistic</strong> — how many SEs is x̄ from μ₀?</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">4</div>
+                                <div class="step-body">
+                                    <p><strong>Find p-value</strong> — probability of seeing your data if H₀ were true
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">5</div>
+                                <div class="step-body">
+                                    <p><strong>Decision</strong> — reject H₀ if p-value &lt; α</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">6</div>
+                                <div class="step-body">
+                                    <p><strong>Conclusion in plain English</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid3">
+                            <div class="card">
+                                <h3>Left-tailed</h3>
+                                <p>Hₐ: μ &lt; μ₀<br>p-value = area to LEFT</p>
+                            </div>
+                            <div class="card">
+                                <h3>Right-tailed</h3>
+                                <p>Hₐ: μ &gt; μ₀<br>p-value = area to RIGHT</p>
+                            </div>
+                            <div class="card">
+                                <h3>Two-tailed</h3>
+                                <p>Hₐ: μ ≠ μ₀<br>p-value = 2 × one-tail area</p>
+                            </div>
+                        </div>
+                        <div class="warn">
+                            <p><strong>Type I Error (α):</strong> Reject H₀ when true. | <strong>Type II Error
+                                    (β):</strong> Fail to reject when false.</p>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch89-formulas">
+                        <div class="sec-title">Key Formulas</div>
+                        <div class="card">
+                            <h3>CI for μ — σ unknown</h3>
+                        </div>
+                        <div class="formula"><span class="kw">x̄ ± t(α/2, n−1)</span> × (s / √n) df = n − 1</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>CI for proportion p</h3>
+                        </div>
+                        <div class="formula"><span class="kw">p̄ ± z(α/2)</span> × √(p̄(1−p̄) / n)
+                            <span class="cm">Requires: np̄ ≥ 5 AND n(1−p̄) ≥ 5</span>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Test statistic for μ (σ unknown)</h3>
+                        </div>
+                        <div class="formula">t = (x̄ − μ₀) / (s / √n) df = n − 1</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Test statistic for proportion p</h3>
+                        </div>
+                        <div class="formula">z = (p̄ − p₀) / √(p₀(1−p₀) / n)</div>
+                    </div>
+                    <div class="pane" id="ch89-worked">
+                        <div class="sec-title">Worked Example — One-Sample t-test</div>
+                        <div class="card">
+                            <h3>Problem</h3>
+                            <p>A company claims batteries last 300 hours. You test 16 batteries: x̄=292, s=20. Test at
+                                α=0.05.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <p>H₀: μ=300 | Hₐ: μ≠300 (two-tailed)</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <p>α=0.05, two-tailed → α/2=0.025 each tail</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <div class="formula">t = (292−300)/(20/√16) = −8/5 = <span class="kw">−1.60</span> df =
+                                    15</div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">4</div>
+                            <div class="step-body">
+                                <p>From t-table df=15, two-tailed: |t|=1.60 &lt; t₀.₀₂₅,₁₅=2.131 → p-value &gt; 0.05</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">5</div>
+                            <div class="step-body">
+                                <p><span style="color:var(--amber)">Fail to Reject H₀</span></p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">6</div>
+                            <div class="step-body">
+                                <p>Insufficient evidence at 5% level to conclude batteries last different than 300
+                                    hours.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch89-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch89-score">0/3</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch89')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch89-q1">
+                                <div class="q-num">Q1 of 3</div>
+                                <div class="q-text">A 95% CI for μ is (42.1, 58.9). Which interpretation is correct?
+                                </div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch89-q1',this,'no','The parameter μ is fixed — it\'s not random. The interval varies across samples.')">There
+                                        is a 95% probability that μ is between 42.1 and 58.9</button>
+                                    <button
+                                        onclick="ck('ch89-q1',this,'ok','Correct! The 95% refers to the procedure: if we repeated sampling, 95% of such intervals would contain μ.')">If
+                                        this procedure is repeated many times, 95% of intervals would contain the true
+                                        μ</button>
+                                    <button
+                                        onclick="ck('ch89-q1',this,'no','x̄ is always in the interval — that\'s not the meaning of confidence.')">The
+                                        sample mean is definitely between 42.1 and 58.9</button>
+                                </div>
+                                <div class="q-fb" id="ch89-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch89-q2">
+                                <div class="q-num">Q2 of 3</div>
+                                <div class="q-text">n=25, x̄=110, s=15, H₀: μ=105, two-tailed, α=0.05. What is the test
+                                    statistic?</div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch89-q2',this,'ok','Correct! t = (110−105)/(15/√25) = 5/3 = 1.667, df=24')">t
+                                        = 1.667, df = 24</button>
+                                    <button onclick="ck('ch89-q2',this,'no','s/√n = 15/5 = 3, not 15/25.')">t = 0.333,
+                                        df = 24</button>
+                                    <button onclick="ck('ch89-q2',this,'no','df = n−1 = 24, not 25.')">t = 1.667, df =
+                                        25</button>
+                                </div>
+                                <div class="q-fb" id="ch89-q2-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch89-q3">
+                                <div class="q-num">Q3 of 3</div>
+                                <div class="q-text">p-value = 0.038, α = 0.05. Correct decision?</div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch89-q3',this,'ok','Correct! p=0.038 &lt; α=0.05 → Reject H₀.')">Reject
+                                        H₀ — sufficient evidence to support Hₐ</button>
+                                    <button onclick="ck('ch89-q3',this,'no','0.038 &lt; 0.05, so we reject.')">Fail to
+                                        reject H₀ — insufficient evidence</button>
+                                    <button onclick="ck('ch89-q3',this,'no','We never accept H₀.')">Accept H₀ — the null
+                                        is proven true</button>
+                                </div>
+                                <div class="q-fb" id="ch89-q3-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CH 10 -->
+            <div class="ch-page" id="ch10">
+                <div class="main-header">
+                    <div class="ch-label">Chapter 10</div>
+                    <h1>Inference for Two Populations</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch10','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch10','formulas',this)">Formulas</button>
+                        <button class="tab-btn" onclick="swTab('ch10','worked',this)">Worked Example</button>
+                        <button class="tab-btn" onclick="swTab('ch10','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch10-concepts">
+                        <div class="grid3">
+                            <div class="card">
+                                <h3>10.1 — Independent Means <span class="tag tg">t-test</span></h3>
+                                <p>Two separate groups. Run F-test first for equal variances. Then pooled or unequal
+                                    variances t-test.</p>
+                            </div>
+                            <div class="card">
+                                <h3>10.2 — Paired Samples <span class="tag ta">t-test</span></h3>
+                                <p>Same subjects measured twice. Compute dᵢ=x₁ᵢ−x₂ᵢ, then one-sample t-test on d̄.</p>
+                            </div>
+                            <div class="card">
+                                <h3>10.3 — Two Proportions <span class="tag tb">z-test</span></h3>
+                                <p>Compare p₁ vs p₂. Use pooled p̄_c under H₀: p₁=p₂.</p>
+                            </div>
+                        </div>
+                        <div class="hl">
+                            <p><strong>Key decision:</strong> Independent (10.1) or Paired (10.2)? If each obs in group
+                                1 is linked to one in group 2 → Paired. Otherwise → Independent.</p>
+                        </div>
+                        <div class="card">
+                            <h3>F-test for Equal Variances (runs BEFORE 10.1)</h3>
+                            <p>H₀: σ²₁=σ²₂ vs Hₐ: σ²₁≠σ²₂. F=s²₁/s²₂, df₁=n₁−1, df₂=n₂−1.</p>
+                            <p style="margin-top:6px">p &lt; α → reject H₀ → use <strong>two-sample t-test assuming
+                                    unequal variances</strong><br>p ≥ α → fail to reject → use pooled t-test</p>
+                        </div>
+                        <div class="warn">
+                            <p>Prof. Gorgievski: <strong>"two-sample t-test assuming unequal variances"</strong> — NOT
+                                "Welch's t-test."</p>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch10-formulas">
+                        <div class="card">
+                            <h3>Two-sample t-test — unequal variances</h3>
+                        </div>
+                        <div class="formula">t = (x̄₁ − x̄₂) / √(s²₁/n₁ + s²₂/n₂)
+                            <span class="cm">df (Satterthwaite) = (s²₁/n₁ + s²₂/n₂)²</span>
+                            <span class="cm"> ─────────────────────────────────</span>
+                            <span class="cm"> (s²₁/n₁)²/(n₁−1) + (s²₂/n₂)²/(n₂−1)</span>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Paired t-test</h3>
+                        </div>
+                        <div class="formula">dᵢ = x₁ᵢ − x₂ᵢ d̄ = mean of dᵢ's s_d = std dev of dᵢ's
+                            t = d̄ / (s_d / √n) df = n − 1</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Two-proportion z-test</h3>
+                        </div>
+                        <div class="formula">p̄_c = (x₁+x₂)/(n₁+n₂) <span class="cm">(pooled under H₀)</span>
+                            z = (p̄₁−p̄₂) / √(p̄_c(1−p̄_c)(1/n₁+1/n₂))
+                            <span class="cm">CI uses UNPOOLED: √(p̄₁(1−p̄₁)/n₁ + p̄₂(1−p̄₂)/n₂)</span>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch10-worked">
+                        <div class="sec-title">Worked Example — Paired t-test</div>
+                        <div class="card">
+                            <h3>Problem</h3>
+                            <p>5 employees before/after training. Before: 72,68,74,65,71 | After: 75,70,78,67,74. Test
+                                if training improved scores (α=0.05).</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <p>H₀: μ_d=0 | Hₐ: μ_d&lt;0 (before−after, negative=improvement)</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <p>d = −3,−2,−4,−2,−3 → d̄=−2.8, s_d=0.837</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <div class="formula">t = −2.8/(0.837/√5) = −2.8/0.374 = <span class="kw">−7.49</span> df
+                                    = 4</div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">4</div>
+                            <div class="step-body">
+                                <p>t₀.₀₅,₄=−2.132. t=−7.49 &lt; −2.132 → in rejection region → <strong>Reject
+                                        H₀.</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch10-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch10-score">0/3</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch10')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch10-q1">
+                                <div class="q-num">Q1</div>
+                                <div class="q-text">Same 20 employees tested before and after training. Which test?
+                                </div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch10-q1',this,'no','Independent assumes two separate groups — these are the same people twice.')">Two-sample
+                                        t-test assuming unequal variances</button>
+                                    <button
+                                        onclick="ck('ch10-q1',this,'ok','Correct! Same subjects measured twice → paired t-test on d̄.')">Paired
+                                        t-test</button>
+                                    <button
+                                        onclick="ck('ch10-q1',this,'no','Chi-square is for categorical data.')">Chi-square
+                                        test</button>
+                                </div>
+                                <div class="q-fb" id="ch10-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch10-q2">
+                                <div class="q-num">Q2</div>
+                                <div class="q-text">F-test p-value=0.021, α=0.05. Which t-test?</div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch10-q2',this,'no','Pooled assumes equal variances. p=0.021 &lt; 0.05 → variances NOT equal.')">Pooled
+                                        (equal variance) t-test</button>
+                                    <button
+                                        onclick="ck('ch10-q2',this,'ok','Correct! p=0.021 &lt; 0.05 → reject H₀: σ²₁=σ²₂ → use two-sample t-test assuming unequal variances.')">Two-sample
+                                        t-test assuming unequal variances</button>
+                                    <button onclick="ck('ch10-q2',this,'no','Paired is for matched samples.')">Paired
+                                        t-test</button>
+                                </div>
+                                <div class="q-fb" id="ch10-q2-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch10-q3">
+                                <div class="q-num">Q3</div>
+                                <div class="q-text">Why do we use pooled proportion p̄_c in the two-proportion z-test?
+                                </div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch10-q3',this,'ok','Correct! Under H₀: p₁=p₂, one common proportion exists — pool to estimate it.')">Under
+                                        H₀ we assume p₁=p₂, so we combine both samples to estimate the common
+                                        proportion</button>
+                                    <button
+                                        onclick="ck('ch10-q3',this,'no','Pooling is about the H₀ assumption, not sample size.')">To
+                                        make the two sample sizes equal</button>
+                                    <button onclick="ck('ch10-q3',this,'no','CIs use unpooled proportions.')">To compute
+                                        the confidence interval more accurately</button>
+                                </div>
+                                <div class="q-fb" id="ch10-q3-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CH 11 -->
+            <div class="ch-page" id="ch11">
+                <div class="main-header">
+                    <div class="ch-label">Chapter 11</div>
+                    <h1>Inference for Variance</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch11','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch11','formulas',this)">Formulas</button>
+                        <button class="tab-btn" onclick="swTab('ch11','worked',this)">Worked Example</button>
+                        <button class="tab-btn" onclick="swTab('ch11','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch11-concepts">
+                        <div class="grid2">
+                            <div class="card">
+                                <h3>11.1 — One variance <span class="tag tp">χ² test</span></h3>
+                                <p>H₀: σ²=σ²₀ using chi-square. Always requires normality. Right-skewed, always
+                                    positive. df=n−1.</p>
+                            </div>
+                            <div class="card">
+                                <h3>11.2 — Two variances <span class="tag ta">F-test</span></h3>
+                                <p>H₀: σ²₁=σ²₂. F=s²₁/s²₂. df₁=n₁−1, df₂=n₂−1. Two-tailed needs both critical values.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hl">
+                            <p>Chi-square two-tailed test needs TWO critical values: χ²_α/2 (upper) and χ²_(1−α/2)
+                                (lower).</p>
+                        </div>
+                        <div class="card">
+                            <h3>CI for one variance</h3>
+                        </div>
+                        <div class="formula">[ (n−1)s² / χ²_(α/2) , (n−1)s² / χ²_(1−α/2) ]</div>
+                    </div>
+                    <div class="pane" id="ch11-formulas">
+                        <div class="card">
+                            <h3>Chi-square test for one variance</h3>
+                        </div>
+                        <div class="formula">χ²_(n−1) = (n−1)s² / σ²₀ df = n − 1
+                            <span class="cm">Right-tail (Hₐ: σ²>σ²₀): p = area RIGHT of χ²
+                                Left-tail (Hₐ: σ²&lt;σ²₀): p = area LEFT of χ²
+                                Two-tail (Hₐ: σ²≠σ²₀): p = 2 × min(left, right)</span>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>F-test for two variances</h3>
+                        </div>
+                        <div class="formula">F = s²₁ / s²₂ df₁=n₁−1, df₂=n₂−1
+                            <span class="cm">Upper critical: F_(α/2, df₁, df₂)
+                                Lower critical: 1 / F_(α/2, df₂, df₁) [flip the df!]</span>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch11-worked">
+                        <div class="sec-title">Worked Example — Chi-square test for variance</div>
+                        <div class="card">
+                            <h3>Problem</h3>
+                            <p>Analyst claims variance &gt; 280(%²). n=10, s²=361. Test α=0.05.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <p>H₀: σ²≤280 | Hₐ: σ²&gt;280 (right-tailed)</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <div class="formula">χ² = (9)(361)/280 = 3249/280 = <span class="kw">11.60</span> df=9
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <p>p-value = 0.2366 &gt; 0.05 → <span style="color:var(--amber)">Fail to Reject
+                                        H₀</span>. Insufficient evidence to support analyst's claim.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch11-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch11-score">0/2</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch11')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch11-q1">
+                                <div class="q-num">Q1</div>
+                                <div class="q-text">n=10, s²=361, σ²₀=280. Chi-square test statistic?</div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch11-q1',this,'no','Don\'t forget (n−1): (10−1)×361/280.')">1.29</button>
+                                    <button
+                                        onclick="ck('ch11-q1',this,'ok','Correct! χ²=(9)(361)/280=11.60, df=9')">11.60</button>
+                                    <button
+                                        onclick="ck('ch11-q1',this,'no','Used n=10 instead of n−1=9.')">12.89</button>
+                                </div>
+                                <div class="q-fb" id="ch11-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch11-q2">
+                                <div class="q-num">Q2</div>
+                                <div class="q-text">To find the LOWER critical value for a two-tailed F-test, you...
+                                </div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch11-q2',this,'no','That only gives the upper critical value.')">Look
+                                        up F_(α/2, df₁, df₂) directly</button>
+                                    <button
+                                        onclick="ck('ch11-q2',this,'ok','Correct! Lower = 1/F_(α/2, df₂, df₁) — flip BOTH the fraction and the df.')">Compute
+                                        1/F_(α/2, df₂, df₁) — flip the fraction AND the df</button>
+                                    <button
+                                        onclick="ck('ch11-q2',this,'no','You need the reciprocal and flipped df.')">Subtract
+                                        the upper critical from 1</button>
+                                </div>
+                                <div class="q-fb" id="ch11-q2-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CH 12 -->
+            <div class="ch-page" id="ch12">
+                <div class="main-header">
+                    <div class="ch-label">Chapter 12</div>
+                    <h1>Chi-Square Tests</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch12','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch12','formulas',this)">Formulas</button>
+                        <button class="tab-btn" onclick="swTab('ch12','worked',this)">Worked Example</button>
+                        <button class="tab-btn" onclick="swTab('ch12','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch12-concepts">
+                        <div class="grid2">
+                            <div class="card">
+                                <h3>12.1 — Goodness-of-Fit</h3>
+                                <p>Do observed counts match a hypothesized distribution? df = k−1.</p>
+                            </div>
+                            <div class="card">
+                                <h3>12.2 — Test for Independence</h3>
+                                <p>Are two categorical variables related? Uses contingency table. df = (rows−1)(cols−1).
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Core formula (both tests)</h3>
+                        </div>
+                        <div class="formula">χ² = Σ (O − E)² / E <span class="cm">sum over all cells</span></div>
+                        <div class="hl">
+                            <p>Always right-tailed only. Large χ² = big O vs E differences = evidence against H₀.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Expected counts — independence test</h3>
+                        </div>
+                        <div class="formula">E_ij = (Row i total × Column j total) / Grand total
+                            <span class="cm">ALL expected counts must be ≥ 5</span>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch12-formulas">
+                        <div class="card">
+                            <h3>Degrees of freedom</h3>
+                        </div>
+                        <div class="formula">Goodness-of-fit: df = k − 1 <span class="cm">(k = categories)</span>
+                            Independence test: df = (r−1)(c−1) <span class="cm">(r=rows, c=cols)</span></div>
+                    </div>
+                    <div class="pane" id="ch12-worked">
+                        <div class="sec-title">Worked Example — Test of Independence</div>
+                        <div class="card">
+                            <h3>Problem</h3>
+                            <p>Under 35: UA=174, Nike=132, Adidas=90 | 35+: UA=54, Nike=72, Adidas=78. Independent?
+                                α=0.05.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <p>H₀: Independent. Hₐ: Dependent. df=(2−1)(3−1)=2</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <p>Row totals: 396, 204. Col totals: 228, 204, 168. Grand=600.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <div class="formula">E(Under35,UA)=396×228/600=<span class="val">150.48</span>
+                                    E(Under35,Nike)=<span class="val">134.64</span> ...</div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">4</div>
+                            <div class="step-body">
+                                <div class="formula">χ² ≈ <span class="kw">22.15</span> χ²₀.₀₅,₂=5.991 22.15 &gt; 5.991
+                                    → Reject H₀</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch12-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch12-score">0/3</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch12')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch12-q1">
+                                <div class="q-num">Q1</div>
+                                <div class="q-text">3×4 contingency table — degrees of freedom?</div>
+                                <div class="q-opts">
+                                    <button onclick="ck('ch12-q1',this,'no','12 is total cells, not df.')">12</button>
+                                    <button onclick="ck('ch12-q1',this,'ok','Correct! df=(3−1)(4−1)=2×3=6')">6</button>
+                                    <button
+                                        onclick="ck('ch12-q1',this,'no','That\'s goodness-of-fit applied wrong.')">5</button>
+                                </div>
+                                <div class="q-fb" id="ch12-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch12-q2">
+                                <div class="q-num">Q2</div>
+                                <div class="q-text">Goodness-of-fit, 6 categories. df=?</div>
+                                <div class="q-opts">
+                                    <button onclick="ck('ch12-q2',this,'no','df=k−1=5.')">6</button>
+                                    <button onclick="ck('ch12-q2',this,'ok','Correct! df=k−1=6−1=5')">5</button>
+                                    <button
+                                        onclick="ck('ch12-q2',this,'no','That\'s independence formula.')">10</button>
+                                </div>
+                                <div class="q-fb" id="ch12-q2-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch12-q3">
+                                <div class="q-num">Q3</div>
+                                <div class="q-text">An expected count in a cell is 3. What's the problem?</div>
+                                <div class="q-opts">
+                                    <button
+                                        onclick="ck('ch12-q3',this,'no','The EXPECTED count matters, not the observed.')">The
+                                        observed count should also be at least 5</button>
+                                    <button
+                                        onclick="ck('ch12-q3',this,'ok','Correct! ALL expected counts must be ≥5 for chi-square to be valid.')">Expected
+                                        counts must all be ≥5 — this violates the assumption</button>
+                                    <button onclick="ck('ch12-q3',this,'no','The df formula doesn\'t change.')">The
+                                        degrees of freedom need to be recalculated</button>
+                                </div>
+                                <div class="q-fb" id="ch12-q3-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CH 13 -->
+            <div class="ch-page" id="ch13">
+                <div class="main-header">
+                    <div class="ch-label">Chapter 13 · Final Focus</div>
+                    <h1>Analysis of Variance (ANOVA)</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch13','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch13','tables',this)">ANOVA Tables</button>
+                        <button class="tab-btn" onclick="swTab('ch13','worked',this)">Worked Example</button>
+                        <button class="tab-btn" onclick="swTab('ch13','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch13-concepts">
+                        <div class="card">
+                            <h3>Why not just run multiple t-tests?</h3>
+                            <p>3 groups pairwise at α=0.05 inflates overall error to ~14%. ANOVA tests all groups at
+                                once, keeps α=0.05 globally.</p>
+                        </div>
+                        <div class="hl">
+                            <p>SST = SSA (between groups) + SSE (within/error). F=MSA/MSE. Large F = factor matters.</p>
+                        </div>
+                        <div class="grid2">
+                            <div class="card">
+                                <h3>One-Way ANOVA (13.1–13.2)</h3>
+                                <p>1 factor. H₀: μ₁=μ₂=...=μₖ. After rejecting H₀, use <strong>Tukey's HSD</strong> to
+                                    find which pairs differ.</p>
+                            </div>
+                            <div class="card">
+                                <h3>Two-Way ANOVA (13.3–13.4)</h3>
+                                <p>2 factors. Tests row effects, column effects, and interaction — three F-tests from
+                                    one ANOVA.</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Randomized Block Design (13.3 — no interaction, 1 obs/cell)</h3>
+                            <p>Factor A = treatment. Factor B = block (nuisance variable). Block absorbs variation from
+                                SSE → smaller SSE → larger F for A → more power.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Two-Way WITH Interaction (13.4 — 2+ obs/cell)</h3>
+                            <p>Interaction: effect of A depends on level of B.</p>
+                            <p style="margin-top:6px"><strong style="color:var(--red)">If interaction is significant →
+                                    do NOT interpret main effects alone.</strong></p>
+                        </div>
+                        <div class="card">
+                            <h3>3 Assumptions</h3>
+                            <ul>
+                                <li>Independence</li>
+                                <li>Normality</li>
+                                <li>Equal variance</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch13-tables">
+                        <div class="sec-title">One-Way ANOVA Table</div>
+                        <table class="tbl">
+                            <tr>
+                                <th>Source</th>
+                                <th>df</th>
+                                <th>SS</th>
+                                <th>MS</th>
+                                <th>F</th>
+                            </tr>
+                            <tr>
+                                <td>Between (Factor A)</td>
+                                <td>k−1</td>
+                                <td>SSA</td>
+                                <td>MSA=SSA/(k−1)</td>
+                                <td>MSA/MSE</td>
+                            </tr>
+                            <tr>
+                                <td>Within (Error)</td>
+                                <td>n−k</td>
+                                <td>SSE</td>
+                                <td>MSE=SSE/(n−k)</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>n−1</td>
+                                <td>SST</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                        </table>
+                        <div class="sec-title" style="margin-top:20px">Two-Way WITH Interaction</div>
+                        <table class="tbl">
+                            <tr>
+                                <th>Source</th>
+                                <th>df</th>
+                                <th>MS</th>
+                                <th>F</th>
+                            </tr>
+                            <tr>
+                                <td>Rows / Factor B</td>
+                                <td>r−1</td>
+                                <td>MSB</td>
+                                <td>MSB/MSE</td>
+                            </tr>
+                            <tr>
+                                <td>Columns / Factor A</td>
+                                <td>c−1</td>
+                                <td>MSA</td>
+                                <td>MSA/MSE</td>
+                            </tr>
+                            <tr>
+                                <td>Interaction A×B</td>
+                                <td>(r−1)(c−1)</td>
+                                <td>MSAB</td>
+                                <td>MSAB/MSE</td>
+                            </tr>
+                            <tr>
+                                <td>Within (Error)</td>
+                                <td>rc(w−1)</td>
+                                <td>MSE</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>rcw−1</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                        </table>
+                        <div class="sec-title" style="margin-top:20px">Randomized Block (no interaction, 1 obs/cell)
+                        </div>
+                        <table class="tbl">
+                            <tr>
+                                <th>Source</th>
+                                <th>df</th>
+                                <th>MS</th>
+                                <th>F</th>
+                            </tr>
+                            <tr>
+                                <td>Factor A (treatment)</td>
+                                <td>c−1</td>
+                                <td>MSA</td>
+                                <td>MSA/MSE</td>
+                            </tr>
+                            <tr>
+                                <td>Factor B (block)</td>
+                                <td>r−1</td>
+                                <td>MSB</td>
+                                <td>MSB/MSE</td>
+                            </tr>
+                            <tr>
+                                <td>Error</td>
+                                <td>(r−1)(c−1)</td>
+                                <td>MSE</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>rc−1</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                        </table>
+                        <div class="hl" style="margin-top:12px">
+                            <p>r=rows, c=cols, w=obs/cell. When w=1, no interaction term — it becomes the error.</p>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch13-worked">
+                        <div class="sec-title">Worked Example — One-Way ANOVA</div>
+                        <div class="card">
+                            <h3>Problem</h3>
+                            <p>3 teaching methods, 5 students each. SSA=128, SSE=310, n=15, k=3. Test α=0.05.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <p>H₀: μ₁=μ₂=μ₃ | Hₐ: At least one differs</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <div class="formula">df_A=2 df_E=12 df_T=14
+                                    MSA=128/2=<span class="val">64</span> MSE=310/12=<span class="val">25.83</span>
+                                    F=64/25.83=<span class="kw">2.478</span></div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <p>F critical(2,12)=3.885. 2.478 &lt; 3.885 → <span style="color:var(--amber)">Fail to
+                                        Reject H₀</span>. No Tukey's needed.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch13-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch13-score">0/4</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch13')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch13-q1">
+                                <div class="q-num">Q1</div>
+                                <div class="q-text">One-Way ANOVA: k=5, n=30. Error df?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch13-q1',this,'no','df_A=k−1=4. Error is different.')">4</button><button
+                                        onclick="ck('ch13-q1',this,'ok','Correct! df_E=n−k=30−5=25')">25</button><button
+                                        onclick="ck('ch13-q1',this,'no','df_T=n−1=29. Error=n−k.')">29</button></div>
+                                <div class="q-fb" id="ch13-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch13-q2">
+                                <div class="q-num">Q2</div>
+                                <div class="q-text">Two-Way with interaction: r=4, c=3, w=2. Interaction df?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch13-q2',this,'no','df_A=c−1=2.')">2</button><button
+                                        onclick="ck('ch13-q2',this,'ok','Correct! df_AB=(r−1)(c−1)=(3)(2)=6')">6</button><button
+                                        onclick="ck('ch13-q2',this,'no','Error df=rc(w−1)=4×3×1=12.')">12</button></div>
+                                <div class="q-fb" id="ch13-q2-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch13-q3">
+                                <div class="q-num">Q3</div>
+                                <div class="q-text">Interaction significant (p=0.008). What do you conclude?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch13-q3',this,'no','Significant interaction means main effects can\'t be interpreted alone.')">Both
+                                        main effects are also significant</button><button
+                                        onclick="ck('ch13-q3',this,'ok','Correct! Effect of A depends on level of B. Main effects are misleading alone.')">Effect
+                                        of Factor A depends on which level of Factor B — main effects cannot be
+                                        interpreted alone</button><button
+                                        onclick="ck('ch13-q3',this,'no','p=0.008 means interaction IS significant.')">There
+                                        is no interaction</button></div>
+                                <div class="q-fb" id="ch13-q3-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch13-q4">
+                                <div class="q-num">Q4</div>
+                                <div class="q-text">Purpose of Tukey's HSD test?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch13-q4',this,'no','ANOVA runs first. Tukey\'s comes after.')">To
+                                        determine if ANOVA should be run</button><button
+                                        onclick="ck('ch13-q4',this,'no','Tukey\'s only runs AFTER rejecting H₀.')">To
+                                        replace ANOVA when variances are unequal</button><button
+                                        onclick="ck('ch13-q4',this,'ok','Correct! ANOVA says at least one mean differs. Tukey\'s finds which specific pairs, controlling multiple comparisons.')">After
+                                        rejecting H₀ in ANOVA, to identify which specific pairs of means differ</button>
+                                </div>
+                                <div class="q-fb" id="ch13-q4-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CH 14-15 -->
+            <div class="ch-page" id="ch1415">
+                <div class="main-header">
+                    <div class="ch-label">Chapters 14–15 · Final Focus</div>
+                    <h1>Simple &amp; Multiple Regression</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch1415','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch1415','formulas',this)">Formulas</button>
+                        <button class="tab-btn" onclick="swTab('ch1415','worked',this)">Reading Output</button>
+                        <button class="tab-btn" onclick="swTab('ch1415','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch1415-concepts">
+                        <div class="card">
+                            <h3>The model</h3>
+                            <p>Sample: <strong style="color:var(--green)">ŷ=b₀+b₁x</strong> | Population:
+                                <strong>y=β₀+β₁x+ε</strong></p>
+                            <p style="margin-top:6px">OLS minimizes SSE=Σ(yᵢ−ŷᵢ)². Residual = actual − predicted.</p>
+                        </div>
+                        <div class="grid2">
+                            <div class="card">
+                                <h3>Key metrics</h3>
+                                <p><strong style="color:var(--green)">R²</strong>=SSR/SST — % variation in y explained.
+                                    Range 0–1.<br><br><strong style="color:var(--amber)">Adj R²</strong> — penalizes
+                                    extra predictors. Use to compare models.<br><br><strong
+                                        style="color:var(--blue)">s_e</strong>=√MSE — avg residual size in original
+                                    units.</p>
+                            </div>
+                            <div class="card">
+                                <h3>Slope interpretation</h3>
+                                <p>"For every 1-unit increase in x, y increases/decreases by b₁ on average."</p>
+                                <p style="margin-top:8px">Multiple: "...holding all other variables constant."</p>
+                                <div class="hl" style="margin-top:8px">
+                                    <p>Association, not causation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Hypothesis test for slope</h3>
+                            <p>H₀: β₁=0 | Hₐ: β₁≠0 | t=b₁/s_b₁ with df=n−2 (simple) or n−k−1 (multiple)</p>
+                        </div>
+                        <div class="card">
+                            <h3>PI vs CI</h3>
+                            <p><strong>CI</strong> for mean y at x — narrower.<br><strong>PI</strong> for individual y
+                                at x — always WIDER (adds individual variability).<br>Both widen as x moves from x̄.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Assumptions — LINE</h3>
+                            <ul>
+                                <li><strong>L</strong>inearity</li>
+                                <li><strong>I</strong>ndependence of residuals</li>
+                                <li><strong>N</strong>ormality of residuals</li>
+                                <li><strong>E</strong>qual variance (homoscedasticity)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch1415-formulas">
+                        <div class="card">
+                            <h3>OLS formulas</h3>
+                        </div>
+                        <div class="formula">b₁ = Σ[(xᵢ−x̄)(yᵢ−ȳ)] / Σ[(xᵢ−x̄)²] b₀ = ȳ − b₁x̄</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Sums of Squares</h3>
+                        </div>
+                        <div class="formula">SST = Σ(yᵢ−ȳ)² <span class="cm">total variation in y</span>
+                            SSR = Σ(ŷᵢ−ȳ)² <span class="cm">explained by model</span>
+                            SSE = Σ(yᵢ−ŷᵢ)² <span class="cm">unexplained/residual</span>
+                            SST = SSR + SSE
+                            R² = SSR/SST = 1 − SSE/SST
+                            s_e = √(SSE/(n−2)) <span class="cm">simple; use n−k−1 for multiple</span></div>
+                    </div>
+                    <div class="pane" id="ch1415-worked">
+                        <div class="sec-title">Reading R Output — what to look for on the exam</div>
+                        <div class="card">
+                            <h3>Typical lm() output</h3>
+                        </div>
+                        <div class="formula">Coefficients:
+                            Estimate Std. Error t value Pr(&gt;|t|)
+                            (Intercept) 12.450 3.211 3.88 0.0015 **
+                            x 2.370 0.480 4.94 0.0002 ***
+
+                            Residual standard error: 5.21 on 18 degrees of freedom
+                            Multiple R-squared: 0.575, Adjusted R-squared: 0.551
+                            F-statistic: 24.4 on 1 and 18 DF, p-value: 0.0001</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>How to read it</h3>
+                            <div class="step">
+                                <div class="step-num">b₀</div>
+                                <div class="step-body">
+                                    <p>Intercept=12.450. When x=0, predicted y=12.45. p=0.0015 → significant.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">b₁</div>
+                                <div class="step-body">
+                                    <p>Slope=2.370. For every 1-unit increase in x, y increases 2.37 on average.
+                                        p=0.0002 → highly significant.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">R²</div>
+                                <div class="step-body">
+                                    <p>0.575 → 57.5% of variation in y explained. Adj R²=0.551 for model comparison.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">df</div>
+                                <div class="step-body">
+                                    <p>18 df for error → n−2=18 → <strong>n=20</strong>. Back-calculate n from df on the
+                                        exam.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch1415-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch1415-score">0/4</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch1415')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch1415-q1">
+                                <div class="q-num">Q1</div>
+                                <div class="q-text">R²=0.73. What does this mean?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q1',this,'no','r=√0.73≈0.85. R² and r are different.')">The
+                                        correlation between x and y is 0.73</button><button
+                                        onclick="ck('ch1415-q1',this,'ok','Correct! 73% of variation in y is explained by the model.')">73%
+                                        of the variation in y is explained by the model</button><button
+                                        onclick="ck('ch1415-q1',this,'no','R² is fit, not significance.')">The model is
+                                        significant at α=0.05</button></div>
+                                <div class="q-fb" id="ch1415-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q2">
+                                <div class="q-num">Q2</div>
+                                <div class="q-text">R output: "18 degrees of freedom" for error in simple regression.
+                                    n=?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q2',this,'no','df_error=n−2 → n=df+2=20.')">18</button><button
+                                        onclick="ck('ch1415-q2',this,'ok','Correct! df_error=n−2 → 18=n−2 → n=20')">20</button><button
+                                        onclick="ck('ch1415-q2',this,'no','19 gives df_error=17.')">19</button></div>
+                                <div class="q-fb" id="ch1415-q2-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q3">
+                                <div class="q-num">Q3</div>
+                                <div class="q-text">Comparing 3 models with 1, 2, 3 predictors. Which metric?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q3',this,'no','R² always increases with more predictors — biased.')">R²</button><button
+                                        onclick="ck('ch1415-q3',this,'ok','Correct! Adjusted R² penalizes unnecessary predictors.')">Adjusted
+                                        R²</button><button
+                                        onclick="ck('ch1415-q3',this,'no','s_e measures accuracy, not model comparison.')">Standard
+                                        error of estimate s_e</button></div>
+                                <div class="q-fb" id="ch1415-q3-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q4">
+                                <div class="q-num">Q4</div>
+                                <div class="q-text">Prediction interval vs confidence interval at x=25. Which is wider?
+                                </div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q4',this,'no','CI for mean response is narrower.')">Confidence
+                                        interval</button><button
+                                        onclick="ck('ch1415-q4',this,'ok','Correct! PI adds individual variability — always wider than CI for mean.')">Prediction
+                                        interval</button><button
+                                        onclick="ck('ch1415-q4',this,'no','They have different widths.')">Same
+                                        width</button></div>
+                                <div class="q-fb" id="ch1415-q4-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CH 20 -->
+            <div class="ch-page" id="ch20">
+                <div class="main-header">
+                    <div class="ch-label">Chapter 20 · Final Focus</div>
+                    <h1>Non-Parametric Statistics</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('ch20','concepts',this)">Concepts</button>
+                        <button class="tab-btn" onclick="swTab('ch20','tests',this)">The 3 Tests</button>
+                        <button class="tab-btn" onclick="swTab('ch20','worked',this)">Worked Example</button>
+                        <button class="tab-btn" onclick="swTab('ch20','quiz',this)">Quiz</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="ch20-concepts">
+                        <div class="card">
+                            <h3>What and when?</h3>
+                            <p>No distribution assumptions — uses <strong>ranks</strong> instead of raw values. Use
+                                when: clearly non-normal, small sample, or ordinal data.</p>
+                        </div>
+                        <div class="hl">
+                            <p>Trade-off: more flexible, but less powerful. Always prefer parametric when assumptions
+                                are met.</p>
+                        </div>
+                        <table class="tbl">
+                            <tr>
+                                <th>Parametric</th>
+                                <th>Non-parametric equivalent</th>
+                                <th>Section</th>
+                            </tr>
+                            <tr>
+                                <td>Two-sample t-test (independent)</td>
+                                <td>Wilcoxon Rank-Sum</td>
+                                <td>20.1</td>
+                            </tr>
+                            <tr>
+                                <td>Paired t-test</td>
+                                <td>Wilcoxon Signed-Rank</td>
+                                <td>20.2</td>
+                            </tr>
+                            <tr>
+                                <td>One-Way ANOVA</td>
+                                <td>Kruskal-Wallis</td>
+                                <td>20.3</td>
+                            </tr>
+                        </table>
+                        <div class="card" style="margin-top:12px">
+                            <h3>How ranking works</h3>
+                            <p>Combine all data, sort smallest to largest, assign ranks 1,2,3... Tied values get the
+                                average of the ranks they'd have occupied.</p>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch20-tests">
+                        <div class="card">
+                            <h3>Wilcoxon Rank-Sum (20.1) <span class="tag tg">2 independent groups</span></h3>
+                            <p>H₀: Populations identical | Hₐ: Differ</p>
+                        </div>
+                        <div class="formula">1. Combine n₁+n₂ obs, rank ALL together
+                            2. T = sum of ranks for smaller sample
+                            3. Compare T to Wilcoxon table</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Wilcoxon Signed-Rank (20.2) <span class="tag ta">paired</span></h3>
+                            <p>H₀: Median difference=0</p>
+                        </div>
+                        <div class="formula">1. dᵢ = x₁ᵢ − x₂ᵢ
+                            2. Drop zeros
+                            3. Rank |dᵢ|
+                            4. Assign + or − from sign of dᵢ
+                            5. T⁺=sum(+ranks), T⁻=sum(−ranks)
+                            6. T=min(T⁺,T⁻) → Wilcoxon table</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Kruskal-Wallis (20.3) <span class="tag tp">3+ groups</span></h3>
+                            <p>Uses chi-square table (NOT Wilcoxon table).</p>
+                        </div>
+                        <div class="formula">H = [12/n(n+1)] × Σ(Rⱼ²/nⱼ) − 3(n+1)
+                            H ~ χ² df = k − 1 <span class="cm">(k = number of groups)</span></div>
+                        <div class="hl">
+                            <p>Kruskal-Wallis is the ONLY non-parametric test here that uses the chi-square table.</p>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch20-worked">
+                        <div class="sec-title">Worked Example — Wilcoxon Rank-Sum</div>
+                        <div class="card">
+                            <h3>Problem</h3>
+                            <p>Group 1: 12,18,9,25 | Group 2: 21,7,30,15,11. Test if populations differ α=0.05.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <p>H₀: Identical. Hₐ: Differ. n₁=4, n₂=5. Smaller=Group 1.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <div class="formula">Sorted: 7,9,11,12,15,18,21,25,30
+                                    Ranks: 1,2, 3, 4, 5, 6, 7, 8, 9</div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <p>Group 1 ranks: 12→4, 18→6, 9→2, 25→8. T=4+6+2+8=<strong>20</strong></p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">4</div>
+                            <div class="step-body">
+                                <p>Table (n₁=4,n₂=5,α=0.05 two-tailed): reject if T≤11 or T≥29. T=20 → <span
+                                        style="color:var(--amber)">Fail to Reject H₀</span>.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pane" id="ch20-quiz">
+                        <div class="quiz-wrap">
+                            <div class="quiz-score">
+                                <div>
+                                    <div class="score-num" id="ch20-score">0/3</div>
+                                    <div class="score-label">correct</div>
+                                </div><button class="reset-btn" onclick="resetQuiz('ch20')">Reset</button>
+                            </div>
+                            <div class="q-item" id="ch20-q1">
+                                <div class="q-num">Q1</div>
+                                <div class="q-text">Small sample, non-normal, two independent groups. Which test?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch20-q1',this,'no','t-test requires normality.')">Two-sample t-test
+                                        assuming unequal variances</button><button
+                                        onclick="ck('ch20-q1',this,'ok','Correct! Wilcoxon Rank-Sum is the non-parametric alternative to the two-sample t-test.')">Wilcoxon
+                                        Rank-Sum test</button><button
+                                        onclick="ck('ch20-q1',this,'no','Kruskal-Wallis is for 3+ groups.')">Kruskal-Wallis
+                                        test</button></div>
+                                <div class="q-fb" id="ch20-q1-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch20-q2">
+                                <div class="q-num">Q2</div>
+                                <div class="q-text">Kruskal-Wallis: k=5 groups, n=40. df=?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch20-q2',this,'no','df=k−1, not k.')">5</button><button
+                                        onclick="ck('ch20-q2',this,'ok','Correct! df=k−1=4. H~χ²(4).')">4</button><button
+                                        onclick="ck('ch20-q2',this,'no','n−1 is for chi-square variance tests.')">39</button>
+                                </div>
+                                <div class="q-fb" id="ch20-q2-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch20-q3">
+                                <div class="q-num">Q3</div>
+                                <div class="q-text">Wilcoxon Signed-Rank: what do you do with dᵢ=0?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch20-q3',this,'no','Zeros have no directional information.')">Assign
+                                        them rank 0</button><button
+                                        onclick="ck('ch20-q3',this,'ok','Correct! Zero differences are dropped entirely.')">Drop
+                                        them from the analysis entirely</button><button
+                                        onclick="ck('ch20-q3',this,'no','Zeros are dropped, not split.')">Split equally
+                                        between T⁺ and T⁻</button></div>
+                                <div class="q-fb" id="ch20-q3-fb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WHICH TEST -->
+            <div class="ch-page" id="chooser">
+                <div class="main-header">
+                    <div class="ch-label">Reference</div>
+                    <h1>Which Test Do I Use?</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('chooser','table',this)">Full Table</button>
+                        <button class="tab-btn" onclick="swTab('chooser','decision',this)">Decision Guide</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="chooser-table">
+                        <table class="tbl">
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Test</th>
+                                <th>Stat</th>
+                                <th>df</th>
+                                <th>Ch</th>
+                            </tr>
+                            <tr>
+                                <td>1 mean, σ known</td>
+                                <td>z-test</td>
+                                <td>z</td>
+                                <td>—</td>
+                                <td>9</td>
+                            </tr>
+                            <tr>
+                                <td>1 mean, σ unknown</td>
+                                <td>t-test</td>
+                                <td>t</td>
+                                <td>n−1</td>
+                                <td>9</td>
+                            </tr>
+                            <tr>
+                                <td>1 proportion</td>
+                                <td>z-test for p</td>
+                                <td>z</td>
+                                <td>—</td>
+                                <td>9</td>
+                            </tr>
+                            <tr>
+                                <td>1 variance vs value</td>
+                                <td>Chi-square</td>
+                                <td>χ²</td>
+                                <td>n−1</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>2 variances equal?</td>
+                                <td>F-test</td>
+                                <td>F</td>
+                                <td>n₁−1, n₂−1</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>2 independent means</td>
+                                <td>Two-sample t-test</td>
+                                <td>t</td>
+                                <td>Welch df</td>
+                                <td>10.1</td>
+                            </tr>
+                            <tr>
+                                <td>2 matched/paired means</td>
+                                <td>Paired t-test</td>
+                                <td>t</td>
+                                <td>n−1</td>
+                                <td>10.2</td>
+                            </tr>
+                            <tr>
+                                <td>2 proportions</td>
+                                <td>Two-prop z-test</td>
+                                <td>z</td>
+                                <td>—</td>
+                                <td>10.3</td>
+                            </tr>
+                            <tr>
+                                <td>Counts fit distribution?</td>
+                                <td>χ² goodness-of-fit</td>
+                                <td>χ²</td>
+                                <td>k−1</td>
+                                <td>12.1</td>
+                            </tr>
+                            <tr>
+                                <td>2 categorical vars related?</td>
+                                <td>χ² independence</td>
+                                <td>χ²</td>
+                                <td>(r−1)(c−1)</td>
+                                <td>12.2</td>
+                            </tr>
+                            <tr>
+                                <td>3+ means (1 factor)</td>
+                                <td>One-Way ANOVA</td>
+                                <td>F</td>
+                                <td>k−1, n−k</td>
+                                <td>13.1</td>
+                            </tr>
+                            <tr>
+                                <td>Which pairs differ?</td>
+                                <td>Tukey's HSD</td>
+                                <td>q</td>
+                                <td>—</td>
+                                <td>13.2</td>
+                            </tr>
+                            <tr>
+                                <td>2 factors, 1 obs/cell</td>
+                                <td>Randomized Block ANOVA</td>
+                                <td>F</td>
+                                <td>see table</td>
+                                <td>13.3</td>
+                            </tr>
+                            <tr>
+                                <td>2 factors, interaction?</td>
+                                <td>Two-Way ANOVA w/ interaction</td>
+                                <td>F</td>
+                                <td>see table</td>
+                                <td>13.4</td>
+                            </tr>
+                            <tr>
+                                <td>Linear relationship?</td>
+                                <td>Regression t-test (slope)</td>
+                                <td>t</td>
+                                <td>n−2</td>
+                                <td>14</td>
+                            </tr>
+                            <tr>
+                                <td>2 groups, non-normal, independent</td>
+                                <td>Wilcoxon Rank-Sum</td>
+                                <td>T</td>
+                                <td>—</td>
+                                <td>20.1</td>
+                            </tr>
+                            <tr>
+                                <td>2 groups, non-normal, paired</td>
+                                <td>Wilcoxon Signed-Rank</td>
+                                <td>T</td>
+                                <td>—</td>
+                                <td>20.2</td>
+                            </tr>
+                            <tr>
+                                <td>3+ groups, non-normal</td>
+                                <td>Kruskal-Wallis</td>
+                                <td>H~χ²</td>
+                                <td>k−1</td>
+                                <td>20.3</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="pane" id="chooser-decision">
+                        <div class="card">
+                            <h3>Step 1 — Type of data?</h3>
+                            <p><strong style="color:var(--amber)">Categorical counts?</strong> → Chi-square (Ch
+                                12)<br><strong style="color:var(--green)">Numeric outcome?</strong> → Step 2</p>
+                        </div>
+                        <div class="card">
+                            <h3>Step 2 — How many groups?</h3>
+                            <p><strong>1 group:</strong> Mean → t-test (9). Variance → χ² (11).<br><strong>2
+                                    groups:</strong> Step 3.<br><strong>3+ groups:</strong> ANOVA (13) or Kruskal-Wallis
+                                (20).</p>
+                        </div>
+                        <div class="card">
+                            <h3>Step 3 — Independent or Paired?</h3>
+                            <p><strong>Independent:</strong> F-test first, then two-sample t-test
+                                (10.1)<br><strong>Paired:</strong> Paired t-test (10.2)<br><strong>Proportions:</strong>
+                                Two-prop z-test (10.3)</p>
+                        </div>
+                        <div class="card">
+                            <h3>Step 4 — Normality violated?</h3>
+                            <p>Yes → switch to non-parametric equivalent (Ch 20).</p>
+                        </div>
+                        <div class="hl">
+                            <p>Most common exam trap: independent vs paired. Most common second trap: which chi-square
+                                formula (GOF vs independence → different df).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULA SHEET -->
+            <div class="ch-page" id="formulas">
+                <div class="main-header">
+                    <div class="ch-label">Reference</div>
+                    <h1>Formula Sheet</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('formulas','all',this)">All Formulas</button>
+                        <button class="tab-btn" onclick="swTab('formulas','df',this)">Degrees of Freedom</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="formulas-all">
+                        <div class="card">
+                            <h3>Confidence Intervals</h3>
+                        </div>
+                        <div class="formula"><span class="cm">μ (σ unknown):</span> x̄ ± t(α/2,n−1) × s/√n
+                            <span class="cm">proportion p: </span> p̄ ± z(α/2) × √(p̄(1−p̄)/n)
+                            <span class="cm">variance σ²: </span> [(n−1)s²/χ²(α/2) , (n−1)s²/χ²(1−α/2)]
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Test Statistics — all in one place</h3>
+                        </div>
+                        <div class="formula"><span class="cm">One-sample t: </span>t = (x̄−μ₀)/(s/√n), df=n−1
+                            <span class="cm">Two-sample t: </span>t = (x̄₁−x̄₂)/√(s²₁/n₁+s²₂/n₂), df=Welch
+                            <span class="cm">Paired t: </span>t = d̄/(s_d/√n), df=n−1
+                            <span class="cm">One prop z: </span>z = (p̄−p₀)/√(p₀(1−p₀)/n)
+                            <span class="cm">Two prop z: </span>z = (p̄₁−p̄₂)/√(p̄_c(1−p̄_c)(1/n₁+1/n₂))
+                            <span class="cm">One variance χ²:</span>χ² = (n−1)s²/σ²₀, df=n−1
+                            <span class="cm">Two variance F: </span>F = s²₁/s²₂, df=(n₁−1,n₂−1)
+                            <span class="cm">GOF χ²: </span>χ² = Σ(O−E)²/E, df=k−1
+                            <span class="cm">Independence χ²:</span>χ² = Σ(O−E)²/E, E_ij=R_i×C_j/n, df=(r−1)(c−1)
+                            <span class="cm">ANOVA F: </span>F = MSA/MSE = (SSA/df_A)/(SSE/df_E)
+                            <span class="cm">Regression t: </span>t = b₁/s_b₁, df=n−2
+                            <span class="cm">Kruskal-Wallis: </span>H=[12/n(n+1)]×Σ(Rⱼ²/nⱼ)−3(n+1), H~χ²(k−1)
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Regression</h3>
+                        </div>
+                        <div class="formula">b₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)² b₀ = ȳ − b₁x̄
+                            R² = SSR/SST = 1−SSE/SST s_e = √(SSE/(n−2))</div>
+                    </div>
+                    <div class="pane" id="formulas-df">
+                        <table class="tbl">
+                            <tr>
+                                <th>Test</th>
+                                <th>df</th>
+                            </tr>
+                            <tr>
+                                <td>One-sample t</td>
+                                <td>n − 1</td>
+                            </tr>
+                            <tr>
+                                <td>Paired t</td>
+                                <td>n − 1 (n = number of pairs)</td>
+                            </tr>
+                            <tr>
+                                <td>Two-sample t (Welch)</td>
+                                <td>Satterthwaite formula</td>
+                            </tr>
+                            <tr>
+                                <td>Chi-square (1 variance)</td>
+                                <td>n − 1</td>
+                            </tr>
+                            <tr>
+                                <td>F-test (2 variances)</td>
+                                <td>df₁=n₁−1, df₂=n₂−1</td>
+                            </tr>
+                            <tr>
+                                <td>Chi-square goodness-of-fit</td>
+                                <td>k − 1</td>
+                            </tr>
+                            <tr>
+                                <td>Chi-square independence</td>
+                                <td>(rows−1)(cols−1)</td>
+                            </tr>
+                            <tr>
+                                <td>One-Way ANOVA — Factor A</td>
+                                <td>k − 1</td>
+                            </tr>
+                            <tr>
+                                <td>One-Way ANOVA — Error</td>
+                                <td>n − k</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Rows</td>
+                                <td>r − 1</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Cols</td>
+                                <td>c − 1</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Interaction</td>
+                                <td>(r−1)(c−1)</td>
+                            </tr>
+                            <tr>
+                                <td>Two-Way ANOVA — Error (w obs/cell)</td>
+                                <td>rc(w−1)</td>
+                            </tr>
+                            <tr>
+                                <td>Randomized Block — Error</td>
+                                <td>(r−1)(c−1)</td>
+                            </tr>
+                            <tr>
+                                <td>Simple regression — Error</td>
+                                <td>n − 2</td>
+                            </tr>
+                            <tr>
+                                <td>Multiple regression — Error</td>
+                                <td>n − k − 1</td>
+                            </tr>
+                            <tr>
+                                <td>Kruskal-Wallis</td>
+                                <td>k − 1 (uses χ² table)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALCULATOR -->
+            <div class="ch-page" id="calc">
+                <div class="main-header">
+                    <div class="ch-label">Tool</div>
+                    <h1>Practice Calculator</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="swTab('calc','ttest',this)">t-tests</button>
+                        <button class="tab-btn" onclick="swTab('calc','variance',this)">Variance</button>
+                        <button class="tab-btn" onclick="swTab('calc','chisq',this)">Chi-Square</button>
+                        <button class="tab-btn" onclick="swTab('calc','anova',this)">ANOVA</button>
+                        <button class="tab-btn" onclick="swTab('calc','regression',this)">Regression</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="pane active" id="calc-ttest">
+                        <div class="card">
+                            <h3>One-Sample t-test</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>Sample mean (x̄)</label><input type="number" id="ts-xbar"
+                                    step="any" placeholder="e.g. 52"></div>
+                            <div class="calc-field"><label>Hypothesized μ₀</label><input type="number" id="ts-mu0"
+                                    step="any" placeholder="e.g. 50"></div>
+                            <div class="calc-field"><label>Std dev (s)</label><input type="number" id="ts-s" step="any"
+                                    placeholder="e.g. 8"></div>
+                            <div class="calc-field"><label>Sample size (n)</label><input type="number" id="ts-n"
+                                    step="any" placeholder="e.g. 25"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcOneSampleT()">Calculate ↓</button>
+                        <div class="calc-output" id="ts-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>Two-Sample t-test (unequal variances)</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>x̄₁</label><input type="number" id="t2-xbar1" step="any"
+                                    placeholder="e.g. 85"></div>
+                            <div class="calc-field"><label>x̄₂</label><input type="number" id="t2-xbar2" step="any"
+                                    placeholder="e.g. 78"></div>
+                            <div class="calc-field"><label>s₁</label><input type="number" id="t2-s1" step="any"
+                                    placeholder="e.g. 10"></div>
+                            <div class="calc-field"><label>s₂</label><input type="number" id="t2-s2" step="any"
+                                    placeholder="e.g. 12"></div>
+                            <div class="calc-field"><label>n₁</label><input type="number" id="t2-n1" step="any"
+                                    placeholder="e.g. 20"></div>
+                            <div class="calc-field"><label>n₂</label><input type="number" id="t2-n2" step="any"
+                                    placeholder="e.g. 25"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcTwoSampleT()">Calculate ↓</button>
+                        <div class="calc-output" id="t2-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>Paired t-test</h3>
+                            <p style="margin-top:4px;font-size:12px;color:var(--text3)">Enter differences (dᵢ = x₁ᵢ −
+                                x₂ᵢ), comma separated</p>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field" style="grid-column:1/-1"><label>Differences d₁, d₂,
+                                    ...</label><input type="text" id="tp-diffs" placeholder="e.g. -3, -2, -4, -2, -3">
+                            </div>
+                        </div>
+                        <button class="calc-btn" onclick="calcPairedT()">Calculate ↓</button>
+                        <div class="calc-output" id="tp-out"></div>
+                    </div>
+
+                    <div class="pane" id="calc-variance">
+                        <div class="card">
+                            <h3>Chi-Square Test for One Variance</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>Sample variance (s²)</label><input type="number" id="cv-s2"
+                                    step="any" placeholder="e.g. 361"></div>
+                            <div class="calc-field"><label>Hypothesized σ²₀</label><input type="number" id="cv-sig0"
+                                    step="any" placeholder="e.g. 280"></div>
+                            <div class="calc-field"><label>Sample size (n)</label><input type="number" id="cv-n"
+                                    step="any" placeholder="e.g. 10"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcChiSqVar()">Calculate ↓</button>
+                        <div class="calc-output" id="cv-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>F-Test for Two Variances</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>s₁²</label><input type="number" id="fv-s1" step="any"
+                                    placeholder="e.g. 45"></div>
+                            <div class="calc-field"><label>s₂²</label><input type="number" id="fv-s2" step="any"
+                                    placeholder="e.g. 28"></div>
+                            <div class="calc-field"><label>n₁</label><input type="number" id="fv-n1" step="any"
+                                    placeholder="e.g. 15"></div>
+                            <div class="calc-field"><label>n₂</label><input type="number" id="fv-n2" step="any"
+                                    placeholder="e.g. 20"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcFTest()">Calculate ↓</button>
+                        <div class="calc-output" id="fv-out"></div>
+                    </div>
+
+                    <div class="pane" id="calc-chisq">
+                        <div class="card">
+                            <h3>Goodness-of-Fit Test</h3>
+                            <p style="margin-top:4px;font-size:12px;color:var(--text3)">Enter observed counts and
+                                expected proportions (must sum to 1), comma separated</p>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field" style="grid-column:1/-1"><label>Observed counts O₁, O₂,
+                                    ...</label><input type="text" id="gof-obs" placeholder="e.g. 30, 50, 20"></div>
+                            <div class="calc-field" style="grid-column:1/-1"><label>Expected proportions p₁, p₂,
+                                    ...</label><input type="text" id="gof-exp" placeholder="e.g. 0.25, 0.50, 0.25">
+                            </div>
+                        </div>
+                        <button class="calc-btn" onclick="calcGOF()">Calculate ↓</button>
+                        <div class="calc-output" id="gof-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>Independence Test — Expected Counts</h3>
+                            <p style="margin-top:4px;font-size:12px;color:var(--text3)">Enter rows separated by
+                                semicolons, values by commas</p>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field" style="grid-column:1/-1"><label>Observed table</label><input
+                                    type="text" id="ind-obs" placeholder="e.g. 174,132,90;54,72,78"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcIndependence()">Calculate ↓</button>
+                        <div class="calc-output" id="ind-out"></div>
+                    </div>
+
+                    <div class="pane" id="calc-anova">
+                        <div class="card">
+                            <h3>One-Way ANOVA Table</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>Number of groups (k)</label><input type="number" id="an-k"
+                                    placeholder="e.g. 3" min="2"></div>
+                            <div class="calc-field"><label>Total n</label><input type="number" id="an-n"
+                                    placeholder="e.g. 15"></div>
+                            <div class="calc-field"><label>SSA (between)</label><input type="number" id="an-ssa"
+                                    step="any" placeholder="e.g. 128"></div>
+                            <div class="calc-field"><label>SSE (within)</label><input type="number" id="an-sse"
+                                    step="any" placeholder="e.g. 310"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcOneWayAnova()">Build Table ↓</button>
+                        <div class="calc-output" id="an-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>Two-Way ANOVA — Degrees of Freedom</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>Rows (r)</label><input type="number" id="tw-r"
+                                    placeholder="e.g. 3"></div>
+                            <div class="calc-field"><label>Columns (c)</label><input type="number" id="tw-c"
+                                    placeholder="e.g. 4"></div>
+                            <div class="calc-field"><label>Obs per cell (w)</label><input type="number" id="tw-w"
+                                    placeholder="e.g. 2"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcTwoWayDf()">Calculate df ↓</button>
+                        <div class="calc-output" id="tw-out"></div>
+                    </div>
+
+                    <div class="pane" id="calc-regression">
+                        <div class="card">
+                            <h3>Regression from SSR / SSE</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>SSR (explained)</label><input type="number" id="rg-ssr"
+                                    step="any" placeholder="e.g. 480"></div>
+                            <div class="calc-field"><label>SSE (residual)</label><input type="number" id="rg-sse"
+                                    step="any" placeholder="e.g. 220"></div>
+                            <div class="calc-field"><label>n (observations)</label><input type="number" id="rg-n"
+                                    placeholder="e.g. 20"></div>
+                            <div class="calc-field"><label>k (predictors)</label><input type="number" id="rg-k"
+                                    placeholder="e.g. 1"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcRegression()">Calculate ↓</button>
+                        <div class="calc-output" id="rg-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>Slope t-test</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>Slope b₁</label><input type="number" id="sl-b1" step="any"
+                                    placeholder="e.g. 2.37"></div>
+                            <div class="calc-field"><label>Std error of b₁</label><input type="number" id="sl-sb1"
+                                    step="any" placeholder="e.g. 0.48"></div>
+                            <div class="calc-field"><label>n</label><input type="number" id="sl-n"
+                                    placeholder="e.g. 20"></div>
+                            <div class="calc-field"><label>k (predictors)</label><input type="number" id="sl-k"
+                                    placeholder="e.g. 1"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcSlopeTest()">Calculate ↓</button>
+                        <div class="calc-output" id="sl-out"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FLASHCARDS -->
+            <div class="ch-page" id="flashcards">
+                <div class="main-header">
+                    <div class="ch-label">Tool</div>
+                    <h1>Formula Flashcards</h1>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="filterCards('all',this)">All</button>
+                        <button class="tab-btn" onclick="filterCards('ch89',this)">Ch 8–9</button>
+                        <button class="tab-btn" onclick="filterCards('ch10',this)">Ch 10</button>
+                        <button class="tab-btn" onclick="filterCards('ch11',this)">Ch 11</button>
+                        <button class="tab-btn" onclick="filterCards('ch12',this)">Ch 12</button>
+                        <button class="tab-btn" onclick="filterCards('ch13',this)">Ch 13</button>
+                        <button class="tab-btn" onclick="filterCards('ch1415',this)">Ch 14–15</button>
+                        <button class="tab-btn" onclick="filterCards('ch20',this)">Ch 20</button>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                        <div style="font-size:12px;color:var(--text3)">Click card to flip · ← → navigate · ✓ = know it ·
+                            ⟳ = needs review</div>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <span style="font-family:var(--mono);font-size:13px;color:var(--text2)" id="fc-counter">1 /
+                                0</span>
+                            <button class="calc-btn" style="padding:5px 12px;font-size:11px;margin-top:0"
+                                onclick="shuffleCards()">Shuffle</button>
+                        </div>
+                    </div>
+
+                    <div class="fc-card" id="fc-card" onclick="flipCard()">
+                        <div style="font-size:10px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px"
+                            id="fc-chapter"></div>
+                        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:10px"
+                            id="fc-side-label">FRONT — What is the formula / concept?</div>
+                        <div id="fc-content" style="font-size:16px;font-weight:500;line-height:1.6;color:var(--text)">
+                        </div>
+                        <div id="fc-back"
+                            style="display:none;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+                            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:10px">
+                                BACK — Formula + when to use</div>
+                            <div id="fc-back-content"
+                                style="font-family:var(--mono);font-size:12px;color:var(--green-text);line-height:2;white-space:pre-wrap">
+                            </div>
+                            <div id="fc-note"
+                                style="margin-top:14px;padding:8px 12px;background:var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 4px 4px 0;font-size:12px;color:#fde68a;line-height:1.5;display:none">
+                            </div>
+                        </div>
+                        <div style="position:absolute;bottom:14px;right:18px;font-size:11px;color:var(--text3)">click to
+                            flip</div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;margin-top:14px;justify-content:center;flex-wrap:wrap;">
+                        <button class="fc-nav-btn" onclick="prevCard()">← Prev</button>
+                        <button class="fc-know-btn" onclick="markKnown()">✓ Know it</button>
+                        <button class="fc-review-btn" onclick="markReview()">⟳ Review later</button>
+                        <button class="fc-nav-btn" onclick="nextCard()">Next →</button>
+                    </div>
+                    <div style="margin-top:16px;display:flex;gap:4px;flex-wrap:wrap" id="fc-dots"></div>
+                </div>
+            </div>
+
+            <!-- WEAK SPOTS -->
+            <div class="ch-page" id="weakspots">
+                <div class="main-header">
+                    <div class="ch-label">Tool</div>
+                    <h1>Weak Spots</h1>
+                </div>
+                <div class="main-content">
+                    <div class="hl" style="margin-bottom:16px">
+                        <p>Questions you answered wrong are tracked here. Use these to focus your study time. Scores
+                            persist across sessions.</p>
+                    </div>
+                    <div id="weakspots-list"></div>
+                    <div id="weakspots-empty"
+                        style="text-align:center;padding:60px 0;color:var(--text3);font-size:14px;">No wrong answers yet
+                        — go work through the chapter quizzes first.</div>
+                    <button onclick="clearWeakSpots()"
+                        style="margin-top:16px;padding:7px 16px;border:1px solid var(--border2);border-radius:6px;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--sans);font-size:12px;">Clear
+                        all</button>
+                </div>
+            </div>
+
+        </div><!-- end .main -->
+    </div><!-- end .layout -->
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // NAVIGATION
+        // ═══════════════════════════════════════════════
+        function go(id) {
+            document.querySelectorAll('.ch-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            const nav = document.getElementById('nav-' + id);
+            if (nav) nav.classList.add('active');
+            if (id === 'weakspots') renderWeakSpots();
+            if (id === 'flashcards') { initFlashcards(); renderDots(); showCard(); }
+        }
+
+        function swTab(ch, pane, btn) {
+            const page = document.getElementById(ch);
+            page.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            page.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            const el = document.getElementById(ch + '-' + pane);
+            if (el) el.classList.add('active');
+        }
+
+        // ═══════════════════════════════════════════════
+        // QUIZ + PERSISTENCE
+        // ═══════════════════════════════════════════════
+        const quizTotals = { 'ch89': 3, 'ch10': 3, 'ch11': 2, 'ch12': 3, 'ch13': 4, 'ch1415': 4, 'ch20': 3 };
+        const quizScores = JSON.parse(localStorage.getItem('ma214-scores') || '{}');
+        Object.keys(quizTotals).forEach(k => { if (!quizScores[k]) quizScores[k] = 0; });
+        let wrongAnswers = JSON.parse(localStorage.getItem('ma214-wrong') || '[]');
+
+        const qMeta = {
+            'ch89-q1': { ch: 'Ch 8–9', text: 'A 95% CI for μ is (42.1,58.9). Which interpretation is correct?', correct: 'If this procedure is repeated many times, 95% of intervals would contain the true μ' },
+            'ch89-q2': { ch: 'Ch 8–9', text: 'n=25, x̄=110, s=15, H₀:μ=105. Test statistic?', correct: 't=1.667, df=24' },
+            'ch89-q3': { ch: 'Ch 8–9', text: 'p-value=0.038, α=0.05. Correct decision?', correct: 'Reject H₀ — sufficient evidence to support Hₐ' },
+            'ch10-q1': { ch: 'Ch 10', text: 'Same 20 employees before/after training. Which test?', correct: 'Paired t-test' },
+            'ch10-q2': { ch: 'Ch 10', text: 'F-test p=0.021, α=0.05. Which t-test?', correct: 'Two-sample t-test assuming unequal variances' },
+            'ch10-q3': { ch: 'Ch 10', text: 'Why use pooled proportion p̄_c in two-proportion z-test?', correct: 'Under H₀ we assume p₁=p₂ — pool to estimate common proportion' },
+            'ch11-q1': { ch: 'Ch 11', text: 'n=10, s²=361, σ²₀=280. Chi-square test statistic?', correct: '11.60' },
+            'ch11-q2': { ch: 'Ch 11', text: 'Lower critical value for two-tailed F-test?', correct: '1/F_(α/2,df₂,df₁) — flip fraction AND df' },
+            'ch12-q1': { ch: 'Ch 12', text: '3×4 contingency table. df?', correct: '6' },
+            'ch12-q2': { ch: 'Ch 12', text: 'GOF test, 6 categories. df?', correct: '5' },
+            'ch12-q3': { ch: 'Ch 12', text: 'Expected count=3. Problem?', correct: 'All expected counts must be ≥5' },
+            'ch13-q1': { ch: 'Ch 13', text: 'One-Way ANOVA: k=5, n=30. Error df?', correct: '25' },
+            'ch13-q2': { ch: 'Ch 13', text: 'Two-Way: r=4, c=3, w=2. Interaction df?', correct: '6' },
+            'ch13-q3': { ch: 'Ch 13', text: 'Interaction significant p=0.008. Conclusion?', correct: 'Effect of A depends on level of B — main effects cannot be interpreted alone' },
+            'ch13-q4': { ch: 'Ch 13', text: 'Purpose of Tukey\'s HSD?', correct: 'After rejecting H₀, identifies which specific pairs differ' },
+            'ch1415-q1': { ch: 'Ch 14–15', text: 'R²=0.73. What does this mean?', correct: '73% of variation in y explained by model' },
+            'ch1415-q2': { ch: 'Ch 14–15', text: '18 df for error in simple regression. n=?', correct: '20' },
+            'ch1415-q3': { ch: 'Ch 14–15', text: 'Comparing 3 models with different # predictors. Which metric?', correct: 'Adjusted R²' },
+            'ch1415-q4': { ch: 'Ch 14–15', text: 'PI vs CI at x=25. Which is wider?', correct: 'Prediction interval' },
+            'ch20-q1': { ch: 'Ch 20', text: 'Small sample, non-normal, 2 independent groups. Which test?', correct: 'Wilcoxon Rank-Sum test' },
+            'ch20-q2': { ch: 'Ch 20', text: 'Kruskal-Wallis k=5. df?', correct: '4' },
+            'ch20-q3': { ch: 'Ch 20', text: 'Wilcoxon Signed-Rank: what to do with dᵢ=0?', correct: 'Drop them entirely' },
+        };
+
+        function ck(qid, btn, result, msg) {
+            const q = document.getElementById(qid);
+            if (q.dataset.answered) return;
+            q.dataset.answered = '1';
+            btn.classList.add(result === 'ok' ? 'ok' : 'no');
+            const fb = document.getElementById(qid + '-fb');
+            fb.textContent = msg;
+            fb.classList.add('show', result === 'ok' ? 'ok' : 'no');
+            q.querySelectorAll('button').forEach(b => b.style.pointerEvents = 'none');
+            const ch = qid.replace(/-q\d+$/, '');
+            if (result === 'ok') {
+                quizScores[ch] = (quizScores[ch] || 0) + 1;
+            } else {
+                const meta = qMeta[qid];
+                if (meta && !wrongAnswers.find(w => w.qid === qid)) {
+                    wrongAnswers.push({ qid, ch: meta.ch, text: meta.text, chosen: btn.textContent.trim(), correct: meta.correct });
+                    localStorage.setItem('ma214-wrong', JSON.stringify(wrongAnswers));
+                }
+            }
+            updateScore(ch);
+            updateProgress();
+            localStorage.setItem('ma214-scores', JSON.stringify(quizScores));
+        }
+
+        function updateScore(ch) {
+            const el = document.getElementById(ch + '-score');
+            if (el) el.textContent = quizScores[ch] + '/' + quizTotals[ch];
+        }
+
+        function resetQuiz(ch) {
+            const page = document.getElementById(ch);
+            page.querySelectorAll('.q-item').forEach(q => {
+                delete q.dataset.answered;
+                q.querySelectorAll('button').forEach(b => { b.classList.remove('ok', 'no'); b.style.pointerEvents = ''; });
+                const fb = q.querySelector('.q-fb');
+                if (fb) { fb.classList.remove('show', 'ok', 'no'); fb.textContent = ''; }
+            });
+            quizScores[ch] = 0;
+            updateScore(ch);
+            updateProgress();
+            localStorage.setItem('ma214-scores', JSON.stringify(quizScores));
+        }
+
+        function updateProgress() {
+            const total = Object.values(quizTotals).reduce((a, b) => a + b, 0);
+            const correct = Object.values(quizScores).reduce((a, b) => a + b, 0);
+            const pct = Math.round((correct / total) * 100);
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('progress-pct').textContent = pct + '%';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            Object.keys(quizTotals).forEach(ch => updateScore(ch));
+            updateProgress();
+        });
+
+        // ═══════════════════════════════════════════════
+        // WEAK SPOTS
+        // ═══════════════════════════════════════════════
+        function renderWeakSpots() {
+            const list = document.getElementById('weakspots-list');
+            const empty = document.getElementById('weakspots-empty');
+            list.innerHTML = '';
+            if (!wrongAnswers.length) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            wrongAnswers.forEach(w => {
+                const div = document.createElement('div');
+                div.className = 'ws-item';
+                div.innerHTML = `<div class="ws-ch">${w.ch}</div><div class="ws-q">${w.text}</div><div class="ws-ans">✗ Your answer: ${w.chosen}</div><div class="ws-correct">✓ Correct: ${w.correct}</div>`;
+                list.appendChild(div);
+            });
+        }
+
+        function clearWeakSpots() {
+            wrongAnswers = [];
+            localStorage.removeItem('ma214-wrong');
+            renderWeakSpots();
+        }
+
+        // ═══════════════════════════════════════════════
+        // FLASHCARDS
+        // ═══════════════════════════════════════════════
+        const allCards = [
+            { ch: 'ch89', front: 'One-sample CI for μ (σ unknown)', back: `x̄ ± t(α/2, n−1) × (s / √n)\n\ndf = n − 1\n\nUse: σ unknown (almost always).\nt from t-table at your confidence level.`, note: 'Requires normality or large n.' },
+            { ch: 'ch89', front: 'CI for proportion p', back: `p̄ ± z(α/2) × √(p̄(1−p̄) / n)\n\nRequires: np̄ ≥ 5 AND n(1−p̄) ≥ 5\n90%: z=1.645  |  95%: z=1.96  |  99%: z=2.576`, note: 'Always uses z, not t.' },
+            { ch: 'ch89', front: 'One-sample t test statistic', back: `t = (x̄ − μ₀) / (s / √n)\n\ndf = n − 1\n\nCompare to t-table at α and df.`, note: '' },
+            { ch: 'ch89', front: 'z test statistic for one proportion', back: `z = (p̄ − p₀) / √(p₀(1−p₀) / n)\n\nUse H₀ value p₀ in denominator — NOT p̄.`, note: 'Denominator uses p₀ — common mistake.' },
+            { ch: 'ch89', front: 'Type I vs Type II Error', back: `Type I (α): Reject H₀ when it's TRUE\n  → False positive. You set α directly.\n\nType II (β): Fail to reject H₀ when FALSE\n  → False negative. Harder to control.`, note: 'Lower α = harder to reject = more Type II risk.' },
+            { ch: 'ch10', front: 'F-test for equal variances', back: `F = s²₁ / s²₂\n\ndf₁ = n₁−1,  df₂ = n₂−1\n\nRun BEFORE two-sample t-test.\nReject H₀ → variances unequal → use unequal variances t-test.`, note: 'Always run F-test first in Ch 10.1.' },
+            { ch: 'ch10', front: 'Two-sample t-test (unequal variances)', back: `t = (x̄₁ − x̄₂) / √(s²₁/n₁ + s²₂/n₂)\n\ndf = Satterthwaite formula\n\nProf. G: "two-sample t-test assuming unequal variances"`, note: 'Do NOT say Welch\'s t-test on the exam.' },
+            { ch: 'ch10', front: 'Paired t-test', back: `dᵢ = x₁ᵢ − x₂ᵢ  (difference for each pair)\nd̄ = mean of dᵢ's\ns_d = std dev of dᵢ's\n\nt = d̄ / (s_d / √n)     df = n − 1\n\nn = number of PAIRS, not total observations`, note: 'Use when subjects are matched or measured twice.' },
+            { ch: 'ch10', front: 'Two-proportion z-test', back: `p̄_c = (x₁ + x₂) / (n₁ + n₂)  ← pooled (for test only)\n\nz = (p̄₁−p̄₂) / √(p̄_c(1−p̄_c)(1/n₁+1/n₂))\n\nCI uses UNPOOLED SE`, note: 'Pool only for the hypothesis test, not for CIs.' },
+            { ch: 'ch11', front: 'Chi-square test for one variance', back: `χ² = (n−1)s² / σ²₀\n\ndf = n − 1\n\nRight-tail: Hₐ: σ² > σ²₀\nLeft-tail:  Hₐ: σ² < σ²₀\nTwo-tail:   need TWO critical values`, note: 'Chi-square is always positive and right-skewed.' },
+            { ch: 'ch11', front: 'CI for variance σ²', back: `Lower: (n−1)s² / χ²(α/2, n−1)\nUpper: (n−1)s² / χ²(1−α/2, n−1)\n\nLarger χ² goes in denominator of LOWER bound.\nInterval is asymmetric — this is normal.`, note: 'Take √ of both bounds to get CI for σ.' },
+            { ch: 'ch12', front: 'Chi-square test statistic', back: `χ² = Σ (O − E)² / E\n\nSummed over all cells.\nAlways RIGHT-tailed only.\n\nGOF: df = k − 1\nIndependence: df = (rows−1)(cols−1)`, note: 'All expected counts must be ≥ 5.' },
+            { ch: 'ch12', front: 'Expected count — independence test', back: `E_ij = (Row i total × Column j total) / Grand total\n\nCompute for EVERY cell before calculating χ².`, note: 'If any E_ij < 5, chi-square is invalid.' },
+            { ch: 'ch13', front: 'One-Way ANOVA — degrees of freedom', back: `df_A = k − 1        (between groups)\ndf_E = n − k        (within/error)\ndf_T = n − 1        (total)\n\nF = MSA / MSE\nMS = SS / df`, note: 'k=groups, n=total observations.' },
+            { ch: 'ch13', front: 'Two-Way ANOVA with interaction — df', back: `Rows (B):     r − 1\nCols (A):     c − 1\nInteraction:  (r−1)(c−1)\nError:        rc(w−1)\nTotal:        rcw − 1`, note: 'Test interaction FIRST. If significant → stop. Main effects misleading.' },
+            { ch: 'ch13', front: 'Randomized Block ANOVA — df', back: `Factor A (treatment): c − 1\nFactor B (block):     r − 1\nError:                (r−1)(c−1)\nTotal:                rc − 1\n\nw=1 obs/cell. No interaction term.`, note: 'Block absorbs SSE variation → more power for testing A.' },
+            { ch: 'ch13', front: 'Tukey\'s HSD — when and why', back: `Run ONLY after rejecting H₀ in ANOVA.\n\nANOVA says: "at least one mean differs"\nTukey's says: "specifically THESE pairs differ"\n\nControls overall Type I error rate\nacross all pairwise comparisons.`, note: 'Never run Tukey\'s if ANOVA fails to reject H₀.' },
+            { ch: 'ch1415', front: 'OLS slope and intercept', back: `b₁ = Σ[(xᵢ−x̄)(yᵢ−ȳ)] / Σ[(xᵢ−x̄)²]\nb₀ = ȳ − b₁x̄\n\nOLS minimizes SSE = Σ(yᵢ−ŷᵢ)²`, note: 'b₀, b₁ are sample estimates of β₀, β₁.' },
+            { ch: 'ch1415', front: 'R² — coefficient of determination', back: `R² = SSR / SST = 1 − SSE/SST\n\nRange: 0 to 1\n"% of variation in y explained by model"\n\nAlways increases when you add predictors.\nUse Adjusted R² to compare models.`, note: 'r² = R² for simple regression. r = √R².' },
+            { ch: 'ch1415', front: 't-test for regression slope', back: `H₀: β₁=0  (no linear relationship)\nHₐ: β₁≠0\n\nt = b₁ / s_b₁\ndf = n − 2      (simple)\ndf = n − k − 1  (multiple, k predictors)`, note: 'p < α → slope significant → x is useful predictor.' },
+            { ch: 'ch1415', front: 'Prediction interval vs Confidence interval', back: `CI for mean y at x*: narrower\n  → uncertainty in the LINE only\n\nPI for individual y at x*: always WIDER\n  → line uncertainty + individual variability\n\nBoth widen as x moves away from x̄.`, note: 'Exam often asks which is wider — always prediction.' },
+            { ch: 'ch20', front: 'Wilcoxon Rank-Sum — procedure', back: `Alt to two-sample t-test (independent groups).\n\n1. Combine n₁+n₂ obs, rank ALL together\n2. T = sum of ranks for SMALLER sample\n3. Compare T to Wilcoxon table\n\nH₀: Populations identical`, note: 'Tied values get average ranks.' },
+            { ch: 'ch20', front: 'Wilcoxon Signed-Rank — procedure', back: `Alt to paired t-test.\n\n1. dᵢ = x₁ᵢ − x₂ᵢ\n2. Drop zeros\n3. Rank |dᵢ|\n4. Assign + or − from sign of dᵢ\n5. T⁺=sum(+ranks), T⁻=sum(−ranks)\n6. T=min(T⁺,T⁻) → Wilcoxon table`, note: 'Zero differences dropped — effective n decreases.' },
+            { ch: 'ch20', front: 'Kruskal-Wallis — formula and distribution', back: `H = [12/n(n+1)] × Σ(Rⱼ²/nⱼ) − 3(n+1)\n\nH ~ χ²  with df = k − 1\nk = number of groups\n\nUses chi-square table (NOT Wilcoxon table)`, note: 'Only non-parametric test here that uses chi-square.' },
+        ];
+
+        let activeCards = [...allCards];
+        let cardIndex = 0;
+        let cardStates = {};
+        let isFlipped = false;
+
+        function initFlashcards() {
+            if (Object.keys(cardStates).length === 0) {
+                allCards.forEach((_, i) => cardStates[i] = 'none');
+            }
+        }
+
+        function filterCards(filter, btn) {
+            const page = document.getElementById('flashcards');
+            page.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            activeCards = filter === 'all' ? [...allCards] : allCards.filter(c => c.ch === filter);
+            cardIndex = 0;
+            isFlipped = false;
+            renderDots();
+            showCard();
+        }
+
+        function showCard() {
+            if (!activeCards.length) return;
+            isFlipped = false;
+            const card = activeCards[cardIndex];
+            document.getElementById('fc-chapter').textContent = card.ch.toUpperCase().replace('CH', 'CH ').replace('1415', '14–15');
+            document.getElementById('fc-content').textContent = card.front;
+            document.getElementById('fc-side-label').textContent = 'FRONT — What is the formula / concept?';
+            document.getElementById('fc-back').style.display = 'none';
+            document.getElementById('fc-counter').textContent = (cardIndex + 1) + ' / ' + activeCards.length;
+            document.getElementById('fc-card').style.borderColor = '';
+        }
+
+        function flipCard() {
+            if (!activeCards.length) return;
+            isFlipped = !isFlipped;
+            const card = activeCards[cardIndex];
+            const back = document.getElementById('fc-back');
+            if (isFlipped) {
+                document.getElementById('fc-side-label').textContent = 'BACK — Formula + when to use';
+                document.getElementById('fc-back-content').textContent = card.back;
+                const noteEl = document.getElementById('fc-note');
+                if (card.note) { noteEl.textContent = '⚠ ' + card.note; noteEl.style.display = 'block'; }
+                else noteEl.style.display = 'none';
+                back.style.display = 'block';
+            } else {
+                back.style.display = 'none';
+                document.getElementById('fc-side-label').textContent = 'FRONT — What is the formula / concept?';
+            }
+        }
+
+        function nextCard() { if (cardIndex < activeCards.length - 1) { cardIndex++; showCard(); renderDots(); } }
+        function prevCard() { if (cardIndex > 0) { cardIndex--; showCard(); renderDots(); } }
+
+        function markKnown() {
+            const globalIdx = allCards.indexOf(activeCards[cardIndex]);
+            if (globalIdx >= 0) cardStates[globalIdx] = 'known';
+            document.getElementById('fc-card').style.borderColor = 'var(--green)';
+            renderDots();
+            setTimeout(nextCard, 400);
+        }
+
+        function markReview() {
+            const globalIdx = allCards.indexOf(activeCards[cardIndex]);
+            if (globalIdx >= 0) cardStates[globalIdx] = 'review';
+            document.getElementById('fc-card').style.borderColor = 'var(--amber)';
+            renderDots();
+            setTimeout(nextCard, 400);
+        }
+
+        function shuffleCards() {
+            for (let i = activeCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [activeCards[i], activeCards[j]] = [activeCards[j], activeCards[i]];
+            }
+            cardIndex = 0;
+            showCard();
+            renderDots();
+        }
+
+        function renderDots() {
+            const dots = document.getElementById('fc-dots');
+            dots.innerHTML = '';
+            activeCards.forEach((card, i) => {
+                const globalIdx = allCards.indexOf(card);
+                const state = cardStates[globalIdx] || 'none';
+                const dot = document.createElement('span');
+                dot.className = 'fc-dot' + (i === cardIndex ? ' active' : '') + (state === 'known' ? ' known' : '') + (state === 'review' ? ' review' : '');
+                dot.onclick = () => { cardIndex = i; showCard(); renderDots(); };
+                dots.appendChild(dot);
+            });
+        }
+
+        document.addEventListener('keydown', e => {
+            if (document.getElementById('flashcards').classList.contains('active')) {
+                if (e.key === 'ArrowRight') nextCard();
+                else if (e.key === 'ArrowLeft') prevCard();
+                else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+            }
+        });
+
+        // ═══════════════════════════════════════════════
+        // CALCULATORS
+        // ═══════════════════════════════════════════════
+        function showOut(id, text) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.classList.add('show');
+        }
+
+        function getVals(...ids) {
+            return ids.map(id => parseFloat(document.getElementById(id).value));
+        }
+
+        function calcOneSampleT() {
+            const [xbar, mu0, s, n] = getVals('ts-xbar', 'ts-mu0', 'ts-s', 'ts-n');
+            if ([xbar, mu0, s, n].some(isNaN)) return alert('Fill in all fields');
+            const se = s / Math.sqrt(n);
+            const t = (xbar - mu0) / se;
+            const df = n - 1;
+            showOut('ts-out',
+                `Step-by-step:\n` +
+                `  SE = s/√n = ${s} / √${n} = ${se.toFixed(4)}\n` +
+                `  t  = (x̄ − μ₀) / SE = (${xbar} − ${mu0}) / ${se.toFixed(4)}\n` +
+                `  t  = ${(xbar - mu0).toFixed(4)} / ${se.toFixed(4)} = ${t.toFixed(4)}\n` +
+                `  df = n − 1 = ${n} − 1 = ${df}\n\n` +
+                `Result: t = ${t.toFixed(4)},  df = ${df}\n` +
+                `→ Compare |t| to t(α/2, ${df}) from the t-table.`
+            );
+        }
+
+        function calcTwoSampleT() {
+            const [xbar1, xbar2, s1, s2, n1, n2] = getVals('t2-xbar1', 't2-xbar2', 't2-s1', 't2-s2', 't2-n1', 't2-n2');
+            if ([xbar1, xbar2, s1, s2, n1, n2].some(isNaN)) return alert('Fill in all fields');
+            const v1 = s1 * s1 / n1, v2 = s2 * s2 / n2;
+            const se = Math.sqrt(v1 + v2);
+            const t = (xbar1 - xbar2) / se;
+            const df = Math.pow(v1 + v2, 2) / (v1 * v1 / (n1 - 1) + v2 * v2 / (n2 - 1));
+            showOut('t2-out',
+                `Step-by-step:\n` +
+                `  s²₁/n₁ = ${s1}²/${n1} = ${v1.toFixed(4)}\n` +
+                `  s²₂/n₂ = ${s2}²/${n2} = ${v2.toFixed(4)}\n` +
+                `  SE = √(${v1.toFixed(4)} + ${v2.toFixed(4)}) = ${se.toFixed(4)}\n` +
+                `  t  = (${xbar1} − ${xbar2}) / ${se.toFixed(4)} = ${t.toFixed(4)}\n` +
+                `  df = (Satterthwaite) = ${df.toFixed(2)} → round down to ${Math.floor(df)}\n\n` +
+                `Result: t = ${t.toFixed(4)},  df ≈ ${Math.floor(df)}\n` +
+                `→ Compare to t(α/2, ${Math.floor(df)}) from t-table.`
+            );
+        }
+
+        function calcPairedT() {
+            const raw = document.getElementById('tp-diffs').value;
+            const diffs = raw.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+            if (diffs.length < 2) return alert('Enter at least 2 differences, comma separated');
+            const n = diffs.length;
+            const dbar = diffs.reduce((a, b) => a + b, 0) / n;
+            const sd = Math.sqrt(diffs.reduce((a, b) => a + Math.pow(b - dbar, 2), 0) / (n - 1));
+            const se = sd / Math.sqrt(n);
+            const t = dbar / se;
+            const df = n - 1;
+            showOut('tp-out',
+                `Differences entered: ${diffs.join(', ')}\n` +
+                `  n    = ${n}\n` +
+                `  d̄    = ${dbar.toFixed(4)}\n` +
+                `  s_d  = ${sd.toFixed(4)}\n` +
+                `  SE   = s_d/√n = ${sd.toFixed(4)}/√${n} = ${se.toFixed(4)}\n` +
+                `  t    = d̄/SE = ${dbar.toFixed(4)}/${se.toFixed(4)} = ${t.toFixed(4)}\n` +
+                `  df   = n−1 = ${df}\n\n` +
+                `Result: t = ${t.toFixed(4)},  df = ${df}\n` +
+                `→ Compare to t(α/2, ${df}) from t-table.`
+            );
+        }
+
+        function calcChiSqVar() {
+            const [s2, sig0, n] = getVals('cv-s2', 'cv-sig0', 'cv-n');
+            if ([s2, sig0, n].some(isNaN)) return alert('Fill in all fields');
+            const df = n - 1;
+            const chi2 = df * s2 / sig0;
+            showOut('cv-out',
+                `Step-by-step:\n` +
+                `  df   = n − 1 = ${n} − 1 = ${df}\n` +
+                `  χ²   = (n−1)s² / σ²₀\n` +
+                `  χ²   = (${df})(${s2}) / ${sig0}\n` +
+                `  χ²   = ${(df * s2).toFixed(4)} / ${sig0}\n` +
+                `  χ²   = ${chi2.toFixed(4)}\n\n` +
+                `Result: χ²(${df}) = ${chi2.toFixed(4)}\n` +
+                `→ Right-tailed: reject if χ² > χ²(α, ${df})\n` +
+                `→ Two-tailed:   reject if χ² > χ²(α/2, ${df}) or χ² < χ²(1−α/2, ${df})\n\n` +
+                `CI for σ²: [ (${df})(${s2})/χ²(α/2) ,  (${df})(${s2})/χ²(1−α/2) ]`
+            );
+        }
+
+        function calcFTest() {
+            const [s1, s2, n1, n2] = getVals('fv-s1', 'fv-s2', 'fv-n1', 'fv-n2');
+            if ([s1, s2, n1, n2].some(isNaN)) return alert('Fill in all fields');
+            const F = s1 / s2;
+            const df1 = n1 - 1, df2 = n2 - 1;
+            showOut('fv-out',
+                `Step-by-step:\n` +
+                `  F    = s²₁ / s²₂ = ${s1} / ${s2} = ${F.toFixed(4)}\n` +
+                `  df₁  = n₁−1 = ${n1}−1 = ${df1}\n` +
+                `  df₂  = n₂−1 = ${n2}−1 = ${df2}\n\n` +
+                `Result: F(${df1}, ${df2}) = ${F.toFixed(4)}\n` +
+                `→ Upper critical: F(α/2, ${df1}, ${df2}) from F-table\n` +
+                `→ Lower critical: 1 / F(α/2, ${df2}, ${df1})  [flip the df!]\n` +
+                `→ Reject H₀ if F > upper or F < lower (two-tailed)\n\n` +
+                `Use in Ch 10.1: If you reject H₀ (σ²₁≠σ²₂) → two-sample t-test assuming unequal variances`
+            );
+        }
+
+        function calcGOF() {
+            const obs = document.getElementById('gof-obs').value.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+            const exp = document.getElementById('gof-exp').value.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+            if (!obs.length || obs.length !== exp.length) return alert('Observed and expected must have same number of values');
+            const n = obs.reduce((a, b) => a + b, 0);
+            const expCounts = exp.map(p => p * n);
+            let chi2 = 0;
+            let lines = `  k = ${obs.length} categories,  n = ${n}\n\n`;
+            lines += `  Category  |  O    |  E      |  (O−E)²/E\n`;
+            lines += `  ──────────|───────|─────────|──────────\n`;
+            obs.forEach((o, i) => {
+                const e = expCounts[i];
+                const contrib = Math.pow(o - e, 2) / e;
+                chi2 += contrib;
+                lines += `  ${(i + 1).toString().padEnd(9)} |  ${o.toString().padEnd(5)} |  ${e.toFixed(2).padEnd(7)} |  ${contrib.toFixed(4)}\n`;
+            });
+            lines += `  ──────────────────────────────────────\n`;
+            lines += `  χ² = ${chi2.toFixed(4)}\n`;
+            lines += `  df = k − 1 = ${obs.length} − 1 = ${obs.length - 1}\n\n`;
+            lines += `→ Compare to χ²(α, ${obs.length - 1}) from chi-square table (right-tail).`;
+            showOut('gof-out', lines);
+        }
+
+        function calcIndependence() {
+            const raw = document.getElementById('ind-obs').value;
+            const rows = raw.split(';').map(r => r.split(',').map(x => parseFloat(x.trim())));
+            if (rows.some(r => r.some(isNaN))) return alert('Check your input format: rows separated by ; values by ,');
+            const r = rows.length, c = rows[0].length;
+            const rowTotals = rows.map(row => row.reduce((a, b) => a + b, 0));
+            const colTotals = Array(c).fill(0);
+            rows.forEach(row => row.forEach((v, j) => colTotals[j] += v));
+            const n = rowTotals.reduce((a, b) => a + b, 0);
+            let chi2 = 0;
+            let lines = `  ${r}×${c} table,  n = ${n}\n  df = (${r}−1)(${c}−1) = ${(r - 1) * (c - 1)}\n\n`;
+            lines += `  Expected counts (E_ij = row_i × col_j / n):\n`;
+            rows.forEach((row, i) => {
+                row.forEach((o, j) => {
+                    const e = rowTotals[i] * colTotals[j] / n;
+                    const contrib = Math.pow(o - e, 2) / e;
+                    chi2 += contrib;
+                    lines += `  E(${i + 1},${j + 1}) = ${rowTotals[i]}×${colTotals[j]}/${n} = ${e.toFixed(2)}   O=${o}   (O−E)²/E=${contrib.toFixed(4)}\n`;
+                });
+            });
+            lines += `\n  χ² = ${chi2.toFixed(4)},  df = ${(r - 1) * (c - 1)}\n`;
+            const anyLow = rows.some((row, i) => row.some((_, j) => rowTotals[i] * colTotals[j] / n < 5));
+            if (anyLow) lines += `\n  ⚠ WARNING: Some expected counts < 5. Chi-square may be invalid.`;
+            lines += `\n→ Compare to χ²(α, ${(r - 1) * (c - 1)}) from table (right-tail).`;
+            showOut('ind-out', lines);
+        }
+
+        function calcOneWayAnova() {
+            const [k, n, ssa, sse] = getVals('an-k', 'an-n', 'an-ssa', 'an-sse');
+            if ([k, n, ssa, sse].some(isNaN)) return alert('Fill in all fields');
+            const dfa = k - 1, dfe = n - k, dft = n - 1;
+            const sst = ssa + sse, msa = ssa / dfa, mse = sse / dfe, F = msa / mse;
+            showOut('an-out',
+                `One-Way ANOVA Table:\n\n` +
+                `  Source       df     SS        MS        F\n` +
+                `  ──────────────────────────────────────────────\n` +
+                `  Between (A)  ${dfa.toString().padEnd(6)} ${ssa.toFixed(2).padEnd(9)} ${msa.toFixed(4).padEnd(9)} ${F.toFixed(4)}\n` +
+                `  Within (E)   ${dfe.toString().padEnd(6)} ${sse.toFixed(2).padEnd(9)} ${mse.toFixed(4)}\n` +
+                `  Total        ${dft.toString().padEnd(6)} ${sst.toFixed(2)}\n\n` +
+                `  F = MSA/MSE = ${msa.toFixed(4)} / ${mse.toFixed(4)} = ${F.toFixed(4)}\n\n` +
+                `→ Compare to F(α, ${dfa}, ${dfe}) critical value from F-table.\n` +
+                `→ If F > F_critical: Reject H₀ → at least one group mean differs.\n` +
+                `→ Then run Tukey's HSD to find which pairs.`
+            );
+        }
+
+        function calcTwoWayDf() {
+            const [r, c, w] = getVals('tw-r', 'tw-c', 'tw-w');
+            if ([r, c, w].some(isNaN)) return alert('Fill in all fields');
+            const dfA = c - 1, dfB = r - 1, dfAB = (r - 1) * (c - 1), dfE = r * c * (w - 1), dfT = r * c * w - 1;
+            if (w === 1) {
+                showOut('tw-out',
+                    `Randomized Block Design (w=1, no interaction):\n\n` +
+                    `  Factor A (treatment): df = c−1 = ${dfA}\n` +
+                    `  Factor B (block):     df = r−1 = ${dfB}\n` +
+                    `  Error:                df = (r−1)(c−1) = ${dfAB}\n` +
+                    `  Total:                df = rc−1 = ${r * c - 1}\n\n` +
+                    `→ When w=1, no interaction term — it becomes the error.`
+                );
+            } else {
+                showOut('tw-out',
+                    `Two-Way ANOVA WITH Interaction (w=${w} obs/cell):\n\n` +
+                    `  Rows / Factor B:   df = r−1 = ${dfB}\n` +
+                    `  Cols / Factor A:   df = c−1 = ${dfA}\n` +
+                    `  Interaction A×B:   df = (r−1)(c−1) = ${dfAB}\n` +
+                    `  Within (Error):    df = rc(w−1) = ${dfE}\n` +
+                    `  Total:             df = rcw−1 = ${dfT}\n\n` +
+                    `→ Test interaction FIRST. If significant (p<α): STOP.\n` +
+                    `  Main effects cannot be interpreted when interaction is significant.`
+                );
+            }
+        }
+
+        function calcRegression() {
+            const [ssr, sse, n, k] = getVals('rg-ssr', 'rg-sse', 'rg-n', 'rg-k');
+            if ([ssr, sse, n, k].some(isNaN)) return alert('Fill in all fields');
+            const sst = ssr + sse, R2 = ssr / sst, adjR2 = 1 - (1 - R2) * (n - 1) / (n - k - 1);
+            const dfE = n - k - 1, mse = sse / dfE, se = Math.sqrt(mse);
+            const dfR = k, msr = ssr / dfR, F = msr / mse;
+            showOut('rg-out',
+                `Regression Summary:\n\n` +
+                `  SST = SSR + SSE = ${ssr} + ${sse} = ${sst}\n` +
+                `  R²  = SSR/SST = ${ssr}/${sst} = ${R2.toFixed(4)}\n` +
+                `  Adj R² = 1−(1−R²)(n−1)/(n−k−1) = ${adjR2.toFixed(4)}\n` +
+                `  s_e = √(SSE/df_E) = √(${sse}/${dfE}) = ${se.toFixed(4)}\n\n` +
+                `  ANOVA for regression:\n` +
+                `  Regression: df=${dfR}, MS=${msr.toFixed(4)}, F=${F.toFixed(4)}\n` +
+                `  Error:      df=${dfE}, MS=${mse.toFixed(4)}\n\n` +
+                `→ R² = ${(R2 * 100).toFixed(1)}% of variation in y explained by the model.\n` +
+                `→ Use Adj R² (${adjR2.toFixed(4)}) when comparing models.`
+            );
+        }
+
+        function calcSlopeTest() {
+            const [b1, sb1, n, k] = getVals('sl-b1', 'sl-sb1', 'sl-n', 'sl-k');
+            if ([b1, sb1, n, k].some(isNaN)) return alert('Fill in all fields');
+            const t = b1 / sb1;
+            const df = n - k - 1;
+            showOut('sl-out',
+                `Slope t-test:\n\n` +
+                `  H₀: β₁ = 0  (x has no linear relationship with y)\n` +
+                `  Hₐ: β₁ ≠ 0\n\n` +
+                `  t  = b₁ / s_b₁ = ${b1} / ${sb1} = ${t.toFixed(4)}\n` +
+                `  df = n − k − 1 = ${n} − ${k} − 1 = ${df}\n\n` +
+                `→ Compare |t| = ${Math.abs(t).toFixed(4)} to t(α/2, ${df}) from t-table.\n` +
+                `→ If |t| > critical: reject H₀ → slope is significant → x is a useful predictor.`
+            );
+        }
+    </script>
+</body>
+
+</html>
