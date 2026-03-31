@@ -227,6 +227,26 @@
             transition: width 0.5s;
         }
 
+        /* GRADE CALC */
+        .gc-input {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 12px;
+            padding: 5px 8px;
+        }
+
+        .gc-input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+        .gc-input::placeholder {
+            color: var(--text3);
+        }
+
         /* COUNTDOWN */
         .countdown-box {
             margin-bottom: 12px;
@@ -981,6 +1001,9 @@
                 </div>
                 <div class="nav-item" onclick="go('weakspots')" id="nav-weakspots">
                     <span class="ch-num">!</span> Weak Spots
+                </div>
+                <div class="nav-item" onclick="go('gradecalc')" id="nav-gradecalc">
+                    <span class="ch-num">%</span> Grade Calc
                 </div>
             </div>
 
@@ -2790,6 +2813,111 @@
             </div>
 
 
+            <!-- GRADE CALCULATOR -->
+            <div class="ch-page" id="gradecalc">
+                <div class="main-header">
+                    <div class="ch-label">Tool</div>
+                    <h1>Grade Calculator</h1>
+                </div>
+                <div class="main-content">
+                    <div class="hl" style="margin-bottom:20px">
+                        <p>Enter your scores below. Leave a field blank if you haven't received that grade yet — it'll be excluded from the projection.</p>
+                    </div>
+
+                    <div style="display:grid;gap:12px;max-width:520px">
+
+                        <!-- Homework -->
+                        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                                <div>
+                                    <div style="font-size:13px;font-weight:600">Homework</div>
+                                    <div style="font-size:11px;color:var(--text3);margin-top:2px">15% of grade · lowest score dropped</div>
+                                </div>
+                                <div style="font-family:var(--mono);font-size:11px;color:var(--amber)" id="gc-hw-sub">—</div>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                                <div id="gc-hw-inputs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+                                <button onclick="gcAddHW()" style="font-size:11px;padding:4px 10px;border:1px dashed var(--border2);border-radius:5px;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--sans)">+ Add</button>
+                            </div>
+                        </div>
+
+                        <!-- Worksheets -->
+                        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                                <div>
+                                    <div style="font-size:13px;font-weight:600">Worksheets</div>
+                                    <div style="font-size:11px;color:var(--text3);margin-top:2px">15% of grade · 5 pts each</div>
+                                </div>
+                                <div style="font-family:var(--mono);font-size:11px;color:var(--amber)" id="gc-ws-sub">—</div>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                                <div id="gc-ws-inputs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+                                <button onclick="gcAddWS()" style="font-size:11px;padding:4px 10px;border:1px dashed var(--border2);border-radius:5px;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--sans)">+ Add</button>
+                            </div>
+                        </div>
+
+                        <!-- Projects -->
+                        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                                <div>
+                                    <div style="font-size:13px;font-weight:600">Projects</div>
+                                    <div style="font-size:11px;color:var(--text3);margin-top:2px">20% of grade · 4 R projects</div>
+                                </div>
+                                <div style="font-family:var(--mono);font-size:11px;color:var(--amber)" id="gc-proj-sub">—</div>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                                <div id="gc-proj-inputs" style="display:flex;gap:6px;flex-wrap:wrap">
+                                    <input type="number" min="0" max="100" placeholder="P1 %" oninput="gcCalc()" class="gc-input" style="width:68px">
+                                    <input type="number" min="0" max="100" placeholder="P2 %" oninput="gcCalc()" class="gc-input" style="width:68px">
+                                    <input type="number" min="0" max="100" placeholder="P3 %" oninput="gcCalc()" class="gc-input" style="width:68px">
+                                    <input type="number" min="0" max="100" placeholder="P4 %" oninput="gcCalc()" class="gc-input" style="width:68px">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Midterm -->
+                        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                                <div>
+                                    <div style="font-size:13px;font-weight:600">Midterm Exam</div>
+                                    <div style="font-size:11px;color:var(--text3);margin-top:2px">20% of grade · Wed 3/4</div>
+                                </div>
+                                <input type="number" min="0" max="100" placeholder="%" oninput="gcCalc()" id="gc-mid" class="gc-input" style="width:72px;text-align:right">
+                            </div>
+                        </div>
+
+                        <!-- Final -->
+                        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                                <div>
+                                    <div style="font-size:13px;font-weight:600">Final Exam</div>
+                                    <div style="font-size:11px;color:var(--text3);margin-top:2px">30% of grade · Thu 5/7</div>
+                                </div>
+                                <input type="number" min="0" max="100" placeholder="%" oninput="gcCalc()" id="gc-final" class="gc-input" style="width:72px;text-align:right">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Result -->
+                    <div id="gc-result" style="margin-top:20px;max-width:520px;display:none">
+                        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+                            <div>
+                                <div style="font-size:12px;color:var(--text3);margin-bottom:4px" id="gc-result-label">Current grade</div>
+                                <div style="font-size:11px;color:var(--text3)" id="gc-weight-note"></div>
+                            </div>
+                            <div style="text-align:right">
+                                <div style="font-family:var(--mono);font-size:28px;font-weight:600" id="gc-pct">—</div>
+                                <div style="font-size:13px;font-weight:500;margin-top:2px" id="gc-letter">—</div>
+                            </div>
+                        </div>
+                        <div id="gc-needed" style="margin-top:8px;font-size:12px;color:var(--text3);padding:0 4px"></div>
+                    </div>
+
+                    <button onclick="gcReset()" style="margin-top:16px;padding:7px 16px;border:1px solid var(--border2);border-radius:6px;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--sans);font-size:12px;">Clear all</button>
+                </div>
+            </div>
+
             <!-- GLOSSARY -->
             <div class="ch-page" id="glossary">
                 <div class="main-header">
@@ -3864,6 +3992,155 @@
                 `→ If |t| > critical: reject H₀ → slope is significant → x is a useful predictor.`
             );
         }
+
+        // ═══════════════════════════════════════════════
+        // GRADE CALCULATOR
+        // ═══════════════════════════════════════════════
+        let gcHWCount = 3, gcWSCount = 4;
+
+        function gcMakeInput(placeholder, width) {
+            const el = document.createElement('input');
+            el.type = 'number'; el.min = 0; el.max = 100;
+            el.placeholder = placeholder;
+            el.className = 'gc-input';
+            el.style.width = width + 'px';
+            el.oninput = gcCalc;
+            return el;
+        }
+
+        function gcAddHW() {
+            gcHWCount++;
+            const wrap = document.getElementById('gc-hw-inputs');
+            wrap.appendChild(gcMakeInput('HW' + gcHWCount + ' %', 72));
+            gcCalc();
+        }
+
+        function gcAddWS() {
+            gcWSCount++;
+            const wrap = document.getElementById('gc-ws-inputs');
+            wrap.appendChild(gcMakeInput('WS' + gcWSCount, 56));
+            gcCalc();
+        }
+
+        function gcAvg(inputs) {
+            const vals = [...inputs].map(i => parseFloat(i.value)).filter(v => !isNaN(v) && v >= 0);
+            return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+        }
+
+        function gcHWAvg() {
+            const vals = [...document.querySelectorAll('#gc-hw-inputs .gc-input')]
+                .map(i => parseFloat(i.value)).filter(v => !isNaN(v) && v >= 0);
+            if (!vals.length) return null;
+            if (vals.length > 1) vals.sort((a, b) => a - b).shift(); // drop lowest
+            return vals.reduce((a, b) => a + b, 0) / vals.length;
+        }
+
+        function gcWSAvg() {
+            // worksheets are 0-5 pts, convert to %
+            const vals = [...document.querySelectorAll('#gc-ws-inputs .gc-input')]
+                .map(i => parseFloat(i.value)).filter(v => !isNaN(v) && v >= 0);
+            if (!vals.length) return null;
+            return (vals.reduce((a, b) => a + b, 0) / (vals.length * 5)) * 100;
+        }
+
+        function gcLetter(pct) {
+            if (pct >= 93) return 'A';
+            if (pct >= 90) return 'A−';
+            if (pct >= 87) return 'B+';
+            if (pct >= 83) return 'B';
+            if (pct >= 80) return 'B−';
+            if (pct >= 77) return 'C+';
+            if (pct >= 73) return 'C';
+            if (pct >= 70) return 'C−';
+            if (pct >= 60) return 'D';
+            return 'F';
+        }
+
+        function gcLetterColor(letter) {
+            if (letter.startsWith('A')) return 'var(--green)';
+            if (letter.startsWith('B')) return 'var(--blue)';
+            if (letter.startsWith('C')) return 'var(--amber)';
+            return 'var(--red)';
+        }
+
+        function gcCalc() {
+            const weights = { hw: 0.15, ws: 0.15, proj: 0.20, mid: 0.20, fin: 0.30 };
+
+            const hw   = gcHWAvg();
+            const ws   = gcWSAvg();
+            const proj = gcAvg(document.querySelectorAll('#gc-proj-inputs .gc-input'));
+            const mid  = parseFloat(document.getElementById('gc-mid').value);
+            const fin  = parseFloat(document.getElementById('gc-final').value);
+
+            const scores = { hw, ws, proj, mid: isNaN(mid) ? null : mid, fin: isNaN(fin) ? null : fin };
+
+            // update sub-labels
+            document.getElementById('gc-hw-sub').textContent  = hw   != null ? hw.toFixed(1)   + '%' : '—';
+            document.getElementById('gc-ws-sub').textContent  = ws   != null ? ws.toFixed(1)   + '%' : '—';
+            document.getElementById('gc-proj-sub').textContent = proj != null ? proj.toFixed(1) + '%' : '—';
+
+            const entries = Object.entries(scores).filter(([, v]) => v !== null);
+            if (!entries.length) { document.getElementById('gc-result').style.display = 'none'; return; }
+
+            const usedWeight = entries.reduce((s, [k]) => s + weights[k], 0);
+            const weighted   = entries.reduce((s, [k, v]) => s + v * weights[k], 0);
+            const projected  = (weighted / usedWeight) * 100;
+            const current    = (weighted / 1) * (1 / usedWeight) * usedWeight; // = weighted
+
+            const pctDisplay = (weighted / usedWeight).toFixed(1);
+            const letter = gcLetter(parseFloat(pctDisplay));
+
+            document.getElementById('gc-result').style.display = 'block';
+            document.getElementById('gc-pct').textContent = pctDisplay + '%';
+            document.getElementById('gc-pct').style.color = gcLetterColor(letter);
+            document.getElementById('gc-letter').textContent = letter;
+            document.getElementById('gc-letter').style.color = gcLetterColor(letter);
+
+            const missing = usedWeight < 0.999;
+            document.getElementById('gc-result-label').textContent = missing ? 'Projected grade (entered categories)' : 'Final grade';
+            document.getElementById('gc-weight-note').textContent = missing
+                ? Math.round(usedWeight * 100) + '% of grade entered'
+                : '100% of grade entered';
+
+            // "what do I need on the final?" hint
+            const needEl = document.getElementById('gc-needed');
+            if (scores.fin === null && usedWeight > 0 && usedWeight < 1) {
+                const restWeight = 1 - usedWeight;
+                const targets = [90, 80, 70];
+                const hints = targets.map(t => {
+                    const need = (t - weighted) / restWeight;
+                    return need <= 100 ? `${t}% (${letter.startsWith(t >= 90 ? 'A' : t >= 80 ? 'B' : 'C') ? '✓' : ''}need ${need.toFixed(0)} on remaining)` : null;
+                }).filter(Boolean);
+                if (scores.fin === null && weights.fin <= restWeight) {
+                    const needForA = (90 - weighted) / weights.fin;
+                    const needForB = (80 - weighted) / weights.fin;
+                    const needForC = (70 - weighted) / weights.fin;
+                    let hint = 'To get an A: need ' + Math.max(0, needForA).toFixed(0) + '% on final';
+                    if (needForA > 100) hint = 'To get a B: need ' + Math.max(0, needForB).toFixed(0) + '% on final';
+                    if (needForB > 100) hint = 'To get a C: need ' + Math.max(0, needForC).toFixed(0) + '% on final';
+                    needEl.textContent = hint;
+                } else { needEl.textContent = ''; }
+            } else { needEl.textContent = ''; }
+        }
+
+        function gcReset() {
+            document.querySelectorAll('#gc-hw-inputs, #gc-ws-inputs').forEach(w => w.innerHTML = '');
+            document.querySelectorAll('#gc-proj-inputs .gc-input').forEach(i => i.value = '');
+            document.getElementById('gc-mid').value = '';
+            document.getElementById('gc-final').value = '';
+            gcHWCount = 3; gcWSCount = 4;
+            gcInitInputs();
+            gcCalc();
+        }
+
+        function gcInitInputs() {
+            const hwWrap = document.getElementById('gc-hw-inputs');
+            const wsWrap = document.getElementById('gc-ws-inputs');
+            for (let i = 1; i <= gcHWCount; i++) hwWrap.appendChild(gcMakeInput('HW' + i + ' %', 72));
+            for (let i = 1; i <= gcWSCount; i++) wsWrap.appendChild(gcMakeInput('WS' + i + '/5', 56));
+        }
+
+        document.addEventListener('DOMContentLoaded', gcInitInputs);
 
         // Light/dark toggle
         (function () {
