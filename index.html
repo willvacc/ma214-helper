@@ -227,6 +227,105 @@
             transition: width 0.5s;
         }
 
+        /* ACCORDION */
+        .acc-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .acc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11px 16px;
+            cursor: pointer;
+            background: var(--surface2);
+            font-size: 13px;
+            font-weight: 500;
+            user-select: none;
+            transition: background 0.15s;
+            gap: 8px;
+        }
+
+        .acc-header:hover { background: var(--surface); }
+        .acc-header.open { border-bottom: 1px solid var(--border); }
+
+        .acc-ch {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--green);
+            background: var(--green-dim);
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        .acc-arrow {
+            font-size: 9px;
+            color: var(--text3);
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .acc-header.open .acc-arrow { transform: rotate(90deg); }
+
+        .acc-body {
+            display: none;
+            padding: 14px 16px;
+            background: var(--bg);
+        }
+
+        .acc-body.open { display: block; }
+
+        .fgroup {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .fgroup:last-child { margin-bottom: 0; }
+
+        .flabel {
+            font-size: 10px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            padding-left: 2px;
+            margin-bottom: 3px;
+        }
+
+        /* QUICK REF */
+        .qr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .qr-item {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+
+        .qr-label {
+            font-size: 10px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 5px;
+        }
+
+        .qr-f {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
         /* GRADE CALC */
         .gc-input {
             background: var(--surface);
@@ -2423,117 +2522,356 @@
                     <div class="ch-label">Reference</div>
                     <h1>Formula Sheet</h1>
                     <div class="tab-row">
-                        <button class="tab-btn active" onclick="swTab('formulas','all',this)">All Formulas</button>
-                        <button class="tab-btn" onclick="swTab('formulas','df',this)">Degrees of Freedom</button>
+                        <button class="tab-btn active" onclick="swTab('formulas','bychapter',this)">By Chapter</button>
+                        <button class="tab-btn" onclick="swTab('formulas','quick',this)">Quick Reference</button>
+                        <button class="tab-btn" onclick="swTab('formulas','df',this)">df Master List</button>
                     </div>
                 </div>
                 <div class="main-content">
-                    <div class="pane active" id="formulas-all">
-                        <div class="card">
-                            <h3>Confidence Intervals</h3>
+
+                    <!-- ── BY CHAPTER ── -->
+                    <div class="pane active" id="formulas-bychapter">
+
+                        <!-- Ch 8-9 -->
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 8–9</span>Confidence Intervals &amp; Hypothesis Tests</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body">
+                                <div class="flabel">Confidence Intervals</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">CI for μ (σ unknown):</span>  x̄  ±  t(α/2, n−1)  ×  s/√n</div>
+                                    <div class="formula"><span class="cm">CI for proportion p:  </span>  p̄  ±  z(α/2)  ×  √(p̄(1−p̄)/n)</div>
+                                    <div class="formula"><span class="cm">CI for variance σ²:   </span>  [ (n−1)s² / χ²(α/2, n−1)  ,  (n−1)s² / χ²(1−α/2, n−1) ]</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Test Statistics</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">t for μ:</span>  t = (x̄ − μ₀) / (s/√n)    df = n−1</div>
+                                    <div class="formula"><span class="cm">z for p:</span>  z = (p̄ − p₀) / √(p₀(1−p₀)/n)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Key z Critical Values</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">z* for 90% CI  / α=0.10 one-tail:</span>  1.282</div>
+                                    <div class="formula"><span class="cm">z* for 95% CI  / α=0.05 one-tail:</span>  1.645</div>
+                                    <div class="formula"><span class="cm">z* for 95% CI  / α=0.025 two-tail:</span> 1.960</div>
+                                    <div class="formula"><span class="cm">z* for 99% CI  / α=0.005 two-tail:</span> 2.576</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="formula"><span class="cm">μ (σ unknown):</span> x̄ ± t(α/2,n−1) × s/√n
-                            <span class="cm">proportion p: </span> p̄ ± z(α/2) × √(p̄(1−p̄)/n)
-                            <span class="cm">variance σ²: </span> [(n−1)s²/χ²(α/2) , (n−1)s²/χ²(1−α/2)]
+
+                        <!-- Ch 10 -->
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 10</span>Inference for Two Populations</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body">
+                                <div class="flabel">Equality of Variances — Run This First</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">F test:</span>  F = s₁²/s₂²    df₁ = n₁−1,  df₂ = n₂−1</div>
+                                    <div class="formula"><span class="cm">note:  </span>  Put larger s² in numerator; compare to upper-tail critical value F(α/2, df₁, df₂)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Two-Sample t — Unequal Variances (Welch)</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">test stat:       </span>  t = (x̄₁ − x̄₂) / √(s₁²/n₁ + s₂²/n₂)</div>
+                                    <div class="formula"><span class="cm">Satterthwaite df:</span>  df = (s₁²/n₁ + s₂²/n₂)²  /  [ (s₁²/n₁)²/(n₁−1) + (s₂²/n₂)²/(n₂−1) ]</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Pooled t-Test — Equal Variances</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">pooled variance:</span>  s_p² = [ (n₁−1)s₁² + (n₂−1)s₂² ] / (n₁+n₂−2)</div>
+                                    <div class="formula"><span class="cm">test stat:      </span>  t = (x̄₁ − x̄₂) / (s_p × √(1/n₁ + 1/n₂))    df = n₁+n₂−2</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Paired t-Test</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">test stat:</span>  t = d̄ / (s_d/√n)    df = n−1    (n = number of pairs, d_i = x₁ᵢ − x₂ᵢ)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Two-Proportion z-Test (Hypothesis Test — Pooled)</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">pooled p̄_c:</span>  p̄_c = (x₁ + x₂) / (n₁ + n₂)</div>
+                                    <div class="formula"><span class="cm">test stat: </span>  z = (p̄₁ − p̄₂) / √( p̄_c(1−p̄_c)(1/n₁ + 1/n₂) )</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Two-Proportion CI (Unpooled SE)</div>
+                                <div class="fgroup">
+                                    <div class="formula">(p̄₁ − p̄₂)  ±  z(α/2) × √( p̄₁(1−p̄₁)/n₁ + p̄₂(1−p̄₂)/n₂ )</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card" style="margin-top:12px">
-                            <h3>Test Statistics — all in one place</h3>
+
+                        <!-- Ch 11 -->
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 11</span>Variance Tests</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body">
+                                <div class="flabel">Chi-Square Test for One Variance</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">test stat:</span>  χ² = (n−1)s² / σ²₀    df = n−1</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">CI for One Variance</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">lower bound:</span>  (n−1)s² / χ²(α/2, n−1)      ← divide by the LARGER χ² critical value</div>
+                                    <div class="formula"><span class="cm">upper bound:</span>  (n−1)s² / χ²(1−α/2, n−1)    ← divide by the SMALLER χ² critical value</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">F-Test for Two Variances</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">test stat:      </span>  F = s₁²/s₂²    df₁ = n₁−1,  df₂ = n₂−1</div>
+                                    <div class="formula"><span class="cm">upper critical: </span>  F(α/2, df₁, df₂)  from F-table (upper tail)</div>
+                                    <div class="formula"><span class="cm">lower critical: </span>  1 / F(α/2, df₂, df₁)    ← flip df order when looking up lower bound</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="formula"><span class="cm">One-sample t: </span>t = (x̄−μ₀)/(s/√n), df=n−1
-                            <span class="cm">Two-sample t: </span>t = (x̄₁−x̄₂)/√(s²₁/n₁+s²₂/n₂), df=Welch
-                            <span class="cm">Paired t: </span>t = d̄/(s_d/√n), df=n−1
-                            <span class="cm">One prop z: </span>z = (p̄−p₀)/√(p₀(1−p₀)/n)
-                            <span class="cm">Two prop z: </span>z = (p̄₁−p̄₂)/√(p̄_c(1−p̄_c)(1/n₁+1/n₂))
-                            <span class="cm">One variance χ²:</span>χ² = (n−1)s²/σ²₀, df=n−1
-                            <span class="cm">Two variance F: </span>F = s²₁/s²₂, df=(n₁−1,n₂−1)
-                            <span class="cm">GOF χ²: </span>χ² = Σ(O−E)²/E, df=k−1
-                            <span class="cm">Independence χ²:</span>χ² = Σ(O−E)²/E, E_ij=R_i×C_j/n, df=(r−1)(c−1)
-                            <span class="cm">ANOVA F: </span>F = MSA/MSE = (SSA/df_A)/(SSE/df_E)
-                            <span class="cm">Regression t: </span>t = b₁/s_b₁, df=n−2
-                            <span class="cm">Kruskal-Wallis: </span>H=[12/n(n+1)]×Σ(Rⱼ²/nⱼ)−3(n+1), H~χ²(k−1)
+
+                        <!-- Ch 12 -->
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 12</span>Chi-Square Tests</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body">
+                                <div class="flabel">Test Statistic (same formula for GOF and independence)</div>
+                                <div class="fgroup">
+                                    <div class="formula">χ² = Σ (O − E)² / E</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Expected Counts</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">independence:</span>  E_ij = (Row_i total × Col_j total) / n</div>
+                                    <div class="formula"><span class="cm">GOF:         </span>  E_k  = n × p_k    (hypothesized proportion for category k)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Degrees of Freedom</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">Goodness-of-Fit:</span>  df = k − 1    (k = number of categories)</div>
+                                    <div class="formula"><span class="cm">Independence:   </span>  df = (r−1)(c−1)    (r = rows, c = cols)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Assumption Check</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">rule of thumb:</span>  All expected counts E_ij ≥ 5</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card" style="margin-top:12px">
-                            <h3>Regression</h3>
+
+                        <!-- Ch 13 — open by default -->
+                        <div class="acc-item">
+                            <div class="acc-header open" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 13</span>ANOVA</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body open">
+                                <div class="flabel">One-Way ANOVA</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">partition:  </span>  SST = SSA + SSE</div>
+                                    <div class="formula"><span class="cm">df:         </span>  df_A = k−1    df_E = n−k    df_T = n−1    (k = # groups, n = total obs)</div>
+                                    <div class="formula"><span class="cm">mean sq:    </span>  MSA = SSA / (k−1)    MSE = SSE / (n−k)</div>
+                                    <div class="formula"><span class="cm">F statistic:</span>  F = MSA / MSE  ~  F(k−1, n−k)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Two-Way ANOVA with Interaction</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">setup:  </span>  Factor A has r levels, Factor B has c levels, w observations per cell</div>
+                                    <div class="formula"><span class="cm">df_A:   </span>  r − 1</div>
+                                    <div class="formula"><span class="cm">df_B:   </span>  c − 1</div>
+                                    <div class="formula"><span class="cm">df_AB:  </span>  (r−1)(c−1)</div>
+                                    <div class="formula"><span class="cm">df_E:   </span>  rc(w−1)</div>
+                                    <div class="formula"><span class="cm">F tests:</span>  F_A = MSA/MSE    F_B = MSB/MSE    F_AB = MSAB/MSE</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Randomized Block Design</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">df_Treatment:</span>  k − 1    (k = # treatments)</div>
+                                    <div class="formula"><span class="cm">df_Block:    </span>  r − 1    (r = # blocks)</div>
+                                    <div class="formula"><span class="cm">df_Error:    </span>  (k−1)(r−1)</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Tukey's HSD — Post-Hoc Multiple Comparisons</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">HSD:   </span>  q(α, k, df_E) × √(MSE / n_j)</div>
+                                    <div class="formula"><span class="cm">reject:</span>  |x̄_i − x̄_j| > HSD</div>
+                                    <div class="formula"><span class="cm">table: </span>  Studentized range table — look up q with k groups and df_E degrees of freedom</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="formula">b₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)² b₀ = ȳ − b₁x̄
-                            R² = SSR/SST = 1−SSE/SST s_e = √(SSE/(n−2))</div>
+
+                        <!-- Ch 14-15 -->
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 14–15</span>Regression</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body">
+                                <div class="flabel">OLS Estimates</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">slope:    </span>  b₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)²  =  SS_xy / SS_xx</div>
+                                    <div class="formula"><span class="cm">intercept:</span>  b₀ = ȳ − b₁x̄</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Model Fit</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">partition: </span>  SST = SSR + SSE</div>
+                                    <div class="formula"><span class="cm">R²:        </span>  R² = SSR/SST = 1 − SSE/SST</div>
+                                    <div class="formula"><span class="cm">Adj R²:    </span>  1 − [ (1−R²)(n−1) / (n−k−1) ]    (k = # predictors; use for multiple regression)</div>
+                                    <div class="formula"><span class="cm">s_e:       </span>  √(SSE/(n−2))  [simple]    or    √(SSE/(n−k−1))  [multiple]</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">t-Test for Slope</div>
+                                <div class="fgroup">
+                                    <div class="formula">t = b₁ / s_{b₁}    df = n−2  [simple]    or    n−k−1  [multiple]</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Interval Estimates at x*</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">CI for mean response (narrower):</span>  ŷ  ±  t × s_e × √( 1/n + (x*−x̄)²/SS_xx )</div>
+                                    <div class="formula"><span class="cm">PI for individual obs (wider):  </span>  ŷ  ±  t × s_e × √( 1 + 1/n + (x*−x̄)²/SS_xx )</div>
+                                    <div class="formula"><span class="cm">key difference:</span>  PI adds "+1" under the radical → always wider than the CI at same x*</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ch 20 -->
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAcc(this)">
+                                <span><span class="acc-ch">CH 20</span>Non-Parametric Tests</span>
+                                <span class="acc-arrow">▶</span>
+                            </div>
+                            <div class="acc-body">
+                                <div class="flabel">Wilcoxon Rank-Sum Test — Two Independent Samples</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">Step 1:</span>  Combine both samples, rank all n₁+n₂ values (average tied ranks)</div>
+                                    <div class="formula"><span class="cm">Step 2:</span>  W = sum of ranks for the group with smaller n</div>
+                                    <div class="formula"><span class="cm">Step 3:</span>  Compare W to Wilcoxon rank-sum table critical values</div>
+                                    <div class="formula"><span class="cm">Large n: </span>  μ_W = n₁(n₁+n₂+1)/2    σ_W = √(n₁n₂(n₁+n₂+1)/12)    z = (W−μ_W)/σ_W</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Wilcoxon Signed-Rank Test — Paired / One-Sample</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">Step 1:</span>  Compute differences  d_i = x₁ᵢ − x₂ᵢ</div>
+                                    <div class="formula"><span class="cm">Step 2:</span>  Drop all d_i = 0  (reduce n accordingly)</div>
+                                    <div class="formula"><span class="cm">Step 3:</span>  Rank |d_i| from 1 to n (average ties)</div>
+                                    <div class="formula"><span class="cm">Step 4:</span>  T⁺ = sum of ranks where d_i &gt; 0    T⁻ = sum of ranks where d_i &lt; 0</div>
+                                    <div class="formula"><span class="cm">Check: </span>  T⁺ + T⁻ = n(n+1)/2</div>
+                                    <div class="formula"><span class="cm">Step 5:</span>  T = min(T⁺, T⁻)</div>
+                                    <div class="formula"><span class="cm">Step 6:</span>  Reject H₀ if T ≤ critical value from Wilcoxon signed-rank table</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Kruskal-Wallis Test — k ≥ 3 Independent Groups</div>
+                                <div class="fgroup">
+                                    <div class="formula">H = [ 12 / (n(n+1)) ]  ×  Σⱼ (Rⱼ² / nⱼ)  −  3(n+1)</div>
+                                    <div class="formula"><span class="cm">n  = total observations    Rⱼ = rank sum for group j    nⱼ = group j sample size</span></div>
+                                    <div class="formula"><span class="cm">dist:</span>  H  ~  χ²(k−1)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- end by chapter -->
+
+                    <!-- ── QUICK REFERENCE ── -->
+                    <div class="pane" id="formulas-quick">
+                        <div class="hl" style="margin-bottom:16px">
+                            <p>Most exam-tested formulas only. Formula and label — no explanations.</p>
+                        </div>
+                        <div class="qr-grid">
+                            <div class="qr-item">
+                                <div class="qr-label">CI for μ (σ unknown)</div>
+                                <div class="qr-f">x̄ ± t(α/2,n−1) · s/√n</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">CI for proportion</div>
+                                <div class="qr-f">p̄ ± z(α/2) · √(p̄(1−p̄)/n)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">One-sample t</div>
+                                <div class="qr-f">t = (x̄−μ₀) / (s/√n)   df = n−1</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">z for proportion</div>
+                                <div class="qr-f">z = (p̄−p₀) / √(p₀(1−p₀)/n)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Two-sample t (Welch)</div>
+                                <div class="qr-f">t = (x̄₁−x̄₂) / √(s₁²/n₁+s₂²/n₂)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Pooled t-test</div>
+                                <div class="qr-f">t = (x̄₁−x̄₂) / (s_p·√(1/n₁+1/n₂))
+s_p²=[(n₁−1)s₁²+(n₂−1)s₂²]/(n₁+n₂−2)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Paired t</div>
+                                <div class="qr-f">t = d̄ / (s_d/√n)   df = n−1</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Two-prop z (pooled)</div>
+                                <div class="qr-f">z=(p̄₁−p̄₂)/√(p̄_c(1−p̄_c)(1/n₁+1/n₂))
+p̄_c=(x₁+x₂)/(n₁+n₂)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">χ² for one variance</div>
+                                <div class="qr-f">χ² = (n−1)s²/σ²₀   df = n−1</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">F for two variances</div>
+                                <div class="qr-f">F = s₁²/s₂²
+df₁=n₁−1, df₂=n₂−1</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">χ² test statistic</div>
+                                <div class="qr-f">χ² = Σ(O−E)²/E
+E_ij = (R_i × C_j) / n</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">One-Way ANOVA F</div>
+                                <div class="qr-f">F = MSA/MSE
+MSA=SSA/(k−1)   MSE=SSE/(n−k)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Tukey HSD</div>
+                                <div class="qr-f">q(α, k, df_E) · √(MSE/nⱼ)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Regression slope &amp; intercept</div>
+                                <div class="qr-f">b₁=SS_xy/SS_xx   b₀=ȳ−b₁x̄</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">R² / Adjusted R²</div>
+                                <div class="qr-f">R²=SSR/SST
+Adj R²=1−[(1−R²)(n−1)/(n−k−1)]</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">t-test for slope</div>
+                                <div class="qr-f">t = b₁/s_{b₁}   df = n−k−1</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Kruskal-Wallis H</div>
+                                <div class="qr-f">H=[12/(n(n+1))]·Σ(Rⱼ²/nⱼ)−3(n+1)
+H ~ χ²(k−1)</div>
+                            </div>
+                            <div class="qr-item">
+                                <div class="qr-label">Wilcoxon Signed-Rank</div>
+                                <div class="qr-f">T = min(T⁺, T⁻)
+Reject if T ≤ critical value</div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- ── DF MASTER LIST ── -->
                     <div class="pane" id="formulas-df">
                         <table class="tbl">
-                            <tr>
-                                <th>Test</th>
-                                <th>df</th>
-                            </tr>
-                            <tr>
-                                <td>One-sample t</td>
-                                <td>n − 1</td>
-                            </tr>
-                            <tr>
-                                <td>Paired t</td>
-                                <td>n − 1 (n = number of pairs)</td>
-                            </tr>
-                            <tr>
-                                <td>Two-sample t (Welch)</td>
-                                <td>Satterthwaite formula</td>
-                            </tr>
-                            <tr>
-                                <td>Chi-square (1 variance)</td>
-                                <td>n − 1</td>
-                            </tr>
-                            <tr>
-                                <td>F-test (2 variances)</td>
-                                <td>df₁=n₁−1, df₂=n₂−1</td>
-                            </tr>
-                            <tr>
-                                <td>Chi-square goodness-of-fit</td>
-                                <td>k − 1</td>
-                            </tr>
-                            <tr>
-                                <td>Chi-square independence</td>
-                                <td>(rows−1)(cols−1)</td>
-                            </tr>
-                            <tr>
-                                <td>One-Way ANOVA — Factor A</td>
-                                <td>k − 1</td>
-                            </tr>
-                            <tr>
-                                <td>One-Way ANOVA — Error</td>
-                                <td>n − k</td>
-                            </tr>
-                            <tr>
-                                <td>Two-Way ANOVA — Rows</td>
-                                <td>r − 1</td>
-                            </tr>
-                            <tr>
-                                <td>Two-Way ANOVA — Cols</td>
-                                <td>c − 1</td>
-                            </tr>
-                            <tr>
-                                <td>Two-Way ANOVA — Interaction</td>
-                                <td>(r−1)(c−1)</td>
-                            </tr>
-                            <tr>
-                                <td>Two-Way ANOVA — Error (w obs/cell)</td>
-                                <td>rc(w−1)</td>
-                            </tr>
-                            <tr>
-                                <td>Randomized Block — Error</td>
-                                <td>(r−1)(c−1)</td>
-                            </tr>
-                            <tr>
-                                <td>Simple regression — Error</td>
-                                <td>n − 2</td>
-                            </tr>
-                            <tr>
-                                <td>Multiple regression — Error</td>
-                                <td>n − k − 1</td>
-                            </tr>
-                            <tr>
-                                <td>Kruskal-Wallis</td>
-                                <td>k − 1 (uses χ² table)</td>
-                            </tr>
+                            <tr><th>Test</th><th>df</th></tr>
+                            <tr><td>One-sample t</td><td>n − 1</td></tr>
+                            <tr><td>Paired t</td><td>n − 1 (n = number of pairs)</td></tr>
+                            <tr><td>Two-sample t (Welch)</td><td>Satterthwaite formula</td></tr>
+                            <tr><td>Pooled two-sample t</td><td>n₁ + n₂ − 2</td></tr>
+                            <tr><td>Chi-square (1 variance)</td><td>n − 1</td></tr>
+                            <tr><td>F-test (2 variances)</td><td>df₁ = n₁−1, df₂ = n₂−1</td></tr>
+                            <tr><td>Chi-square goodness-of-fit</td><td>k − 1</td></tr>
+                            <tr><td>Chi-square independence</td><td>(rows−1)(cols−1)</td></tr>
+                            <tr><td>One-Way ANOVA — Factor A</td><td>k − 1</td></tr>
+                            <tr><td>One-Way ANOVA — Error</td><td>n − k</td></tr>
+                            <tr><td>Two-Way ANOVA — Factor A</td><td>r − 1</td></tr>
+                            <tr><td>Two-Way ANOVA — Factor B</td><td>c − 1</td></tr>
+                            <tr><td>Two-Way ANOVA — Interaction AB</td><td>(r−1)(c−1)</td></tr>
+                            <tr><td>Two-Way ANOVA — Error (w obs/cell)</td><td>rc(w−1)</td></tr>
+                            <tr><td>Randomized Block — Treatment</td><td>k − 1</td></tr>
+                            <tr><td>Randomized Block — Block</td><td>r − 1</td></tr>
+                            <tr><td>Randomized Block — Error</td><td>(k−1)(r−1)</td></tr>
+                            <tr><td>Simple regression — Error</td><td>n − 2</td></tr>
+                            <tr><td>Multiple regression — Error</td><td>n − k − 1</td></tr>
+                            <tr><td>Kruskal-Wallis</td><td>k − 1 (uses χ² table)</td></tr>
                         </table>
                     </div>
+
                 </div>
             </div>
 
@@ -3991,6 +4329,14 @@
                 `→ Compare |t| = ${Math.abs(t).toFixed(4)} to t(α/2, ${df}) from t-table.\n` +
                 `→ If |t| > critical: reject H₀ → slope is significant → x is a useful predictor.`
             );
+        }
+
+        // ═══════════════════════════════════════════════
+        // ACCORDION
+        // ═══════════════════════════════════════════════
+        function toggleAcc(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
         }
 
         // ═══════════════════════════════════════════════
