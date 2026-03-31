@@ -1848,36 +1848,42 @@
                             <tr>
                                 <th>Source</th>
                                 <th>df</th>
+                                <th>SS</th>
                                 <th>MS</th>
                                 <th>F</th>
                             </tr>
                             <tr>
                                 <td>Rows / Factor B</td>
                                 <td>r−1</td>
-                                <td>MSB</td>
+                                <td>SSB</td>
+                                <td>MSB=SSB/(r−1)</td>
                                 <td>MSB/MSE</td>
                             </tr>
                             <tr>
                                 <td>Columns / Factor A</td>
                                 <td>c−1</td>
-                                <td>MSA</td>
+                                <td>SSA</td>
+                                <td>MSA=SSA/(c−1)</td>
                                 <td>MSA/MSE</td>
                             </tr>
                             <tr>
                                 <td>Interaction A×B</td>
                                 <td>(r−1)(c−1)</td>
-                                <td>MSAB</td>
+                                <td>SSAB</td>
+                                <td>MSAB=SSAB/((r−1)(c−1))</td>
                                 <td>MSAB/MSE</td>
                             </tr>
                             <tr>
                                 <td>Within (Error)</td>
                                 <td>rc(w−1)</td>
-                                <td>MSE</td>
+                                <td>SSE</td>
+                                <td>MSE=SSE/(rc(w−1))</td>
                                 <td>—</td>
                             </tr>
                             <tr>
                                 <td>Total</td>
                                 <td>rcw−1</td>
+                                <td>SST</td>
                                 <td>—</td>
                                 <td>—</td>
                             </tr>
@@ -1888,30 +1894,35 @@
                             <tr>
                                 <th>Source</th>
                                 <th>df</th>
+                                <th>SS</th>
                                 <th>MS</th>
                                 <th>F</th>
                             </tr>
                             <tr>
                                 <td>Factor A (treatment)</td>
                                 <td>c−1</td>
-                                <td>MSA</td>
+                                <td>SSA</td>
+                                <td>MSA=SSA/(c−1)</td>
                                 <td>MSA/MSE</td>
                             </tr>
                             <tr>
                                 <td>Factor B (block)</td>
                                 <td>r−1</td>
-                                <td>MSB</td>
+                                <td>SSB</td>
+                                <td>MSB=SSB/(r−1)</td>
                                 <td>MSB/MSE</td>
                             </tr>
                             <tr>
                                 <td>Error</td>
                                 <td>(r−1)(c−1)</td>
-                                <td>MSE</td>
+                                <td>SSE</td>
+                                <td>MSE=SSE/((r−1)(c−1))</td>
                                 <td>—</td>
                             </tr>
                             <tr>
                                 <td>Total</td>
                                 <td>rc−1</td>
+                                <td>SST</td>
                                 <td>—</td>
                                 <td>—</td>
                             </tr>
