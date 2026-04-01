@@ -2022,14 +2022,67 @@
                     <div class="ch-label">Chapters 14–15 · Final Focus</div>
                     <h1>Simple &amp; Multiple Regression</h1>
                     <div class="tab-row">
-                        <button class="tab-btn active" onclick="swTab('ch1415','concepts',this)">Concepts</button>
+                        <button class="tab-btn active" onclick="swTab('ch1415','corr',this)">14.1 Correlation</button>
+                        <button class="tab-btn" onclick="swTab('ch1415','concepts',this)">Concepts</button>
                         <button class="tab-btn" onclick="swTab('ch1415','formulas',this)">Formulas</button>
                         <button class="tab-btn" onclick="swTab('ch1415','worked',this)">Reading Output</button>
                         <button class="tab-btn" onclick="swTab('ch1415','quiz',this)">Quiz</button>
                     </div>
                 </div>
                 <div class="main-content">
-                    <div class="pane active" id="ch1415-concepts">
+
+                    <!-- 14.1 CORRELATION TEST -->
+                    <div class="pane active" id="ch1415-corr">
+                        <div class="card">
+                            <h3>What is the correlation test?</h3>
+                            <p>The sample correlation coefficient <strong>r</strong> measures the strength and direction of the linear relationship between x and y. But r ≠ 0 in a sample even when no true relationship exists in the population. The correlation test asks: is ρ (rho, the population correlation) significantly different from zero?</p>
+                            <ul style="margin-top:8px">
+                                <li><strong>Two-tailed:</strong> H₀: ρ = 0 &nbsp; Hₐ: ρ ≠ 0 &nbsp; (is there any linear relationship?)</li>
+                                <li><strong>Right-tailed:</strong> H₀: ρ ≤ 0 &nbsp; Hₐ: ρ &gt; 0 &nbsp; (positive relationship?)</li>
+                                <li><strong>Left-tailed:</strong> H₀: ρ ≥ 0 &nbsp; Hₐ: ρ &lt; 0 &nbsp; (negative relationship?)</li>
+                            </ul>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Test statistic</h3>
+                        </div>
+                        <div class="formula"><span class="cm">t statistic:</span>  t  =  r × √(n−2) / √(1−r²)
+
+<span class="cm">df:</span>  n − 2
+
+<span class="cm">r:</span>  sample correlation coefficient  (−1 ≤ r ≤ 1)
+<span class="cm">n:</span>  number of (x, y) pairs</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Worked example — Arlington house prices (14.1)</h3>
+                            <p>Data: n = 36 houses, r = 0.777 (size vs. price). Test H₀: ρ = 0 at α = 0.05 (two-tailed).</p>
+                        </div>
+                        <div class="formula"><span class="cm">Step 1 — hypotheses:</span>
+  H₀: ρ = 0    (no linear relationship between size and price)
+  Hₐ: ρ ≠ 0   (two-tailed)
+
+<span class="cm">Step 2 — test statistic:</span>
+  t  =  r × √(n−2) / √(1−r²)
+     =  0.777 × √(36−2) / √(1 − 0.777²)
+     =  0.777 × √34 / √(1 − 0.6037)
+     =  0.777 × 5.8310 / √0.3963
+     =  4.5307 / 0.6296
+     ≈  <span class="kw">7.196</span>
+
+<span class="cm">Step 3 — df:</span>
+  df = n − 2 = 36 − 2 = <span class="kw">34</span>
+
+<span class="cm">Step 4 — critical value:</span>
+  t(0.025, 34) ≈ 2.032  (from t-table, two-tailed α=0.05)
+
+<span class="cm">Step 5 — decision:</span>
+  |t| = 7.196 &gt; 2.032  →  <span class="val">Reject H₀</span>
+
+<span class="cm">Conclusion:</span>  Significant positive linear relationship between house size and price.</div>
+                        <div class="hl" style="margin-top:12px">
+                            <p>Note: in simple regression, the t-test for slope (b₁) and the correlation t-test produce the same t statistic and p-value. They test the same hypothesis — is x a useful linear predictor of y?</p>
+                        </div>
+                    </div>
+
+                    <div class="pane" id="ch1415-concepts">
                         <div class="card">
                             <h3>The model</h3>
                             <p>Sample: <strong style="color:var(--green)">ŷ=b₀+b₁x</strong> | Population:
@@ -2133,7 +2186,7 @@
                         <div class="quiz-wrap">
                             <div class="quiz-score">
                                 <div>
-                                    <div class="score-num" id="ch1415-score">0/4</div>
+                                    <div class="score-num" id="ch1415-score">0/6</div>
                                     <div class="score-label">correct</div>
                                 </div><button class="reset-btn" onclick="resetQuiz('ch1415')">Reset</button>
                             </div>
@@ -2182,6 +2235,24 @@
                                         onclick="ck('ch1415-q4',this,'no','They have different widths.')">Same
                                         width</button></div>
                                 <div class="q-fb" id="ch1415-q4-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q5">
+                                <div class="q-num">Q5</div>
+                                <div class="q-text">A researcher wants to test whether house size and price have a positive linear relationship. Which hypotheses are correct?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q5',this,'no','H₀: ρ=0, Hₐ: ρ≠0 is two-tailed — use this when direction is unspecified.')">H₀: ρ = 0 &nbsp; Hₐ: ρ ≠ 0</button><button
+                                        onclick="ck('ch1415-q5',this,'ok','Correct! Testing for a positive relationship → right-tailed: H₀: ρ ≤ 0, Hₐ: ρ > 0.')">H₀: ρ ≤ 0 &nbsp; Hₐ: ρ &gt; 0</button><button
+                                        onclick="ck('ch1415-q5',this,'no','Left-tailed tests for a negative relationship.')">H₀: ρ ≥ 0 &nbsp; Hₐ: ρ &lt; 0</button></div>
+                                <div class="q-fb" id="ch1415-q5-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q6">
+                                <div class="q-num">Q6</div>
+                                <div class="q-text">r = 0.6, n = 27. What is the correlation t statistic?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q6',this,'ok','Correct! t = 0.6×√25/√(1−0.36) = 0.6×5/√0.64 = 3/0.8 = 3.75. df=25.')">t ≈ 3.75</button><button
+                                        onclick="ck('ch1415-q6',this,'no','Check: t = r√(n−2)/√(1−r²). n−2=25, 1−r²=0.64.')">t ≈ 2.50</button><button
+                                        onclick="ck('ch1415-q6',this,'no','Don\'t forget to take the square root of (1−r²).')">t ≈ 1.44</button></div>
+                                <div class="q-fb" id="ch1415-q6-fb"></div>
                             </div>
                         </div>
                     </div>
@@ -3074,6 +3145,16 @@ Reject if T ≤ critical value</div>
                         </div>
                         <button class="calc-btn" onclick="calcSlopeTest()">Calculate ↓</button>
                         <div class="calc-output" id="sl-out"></div>
+
+                        <div class="card" style="margin-top:20px">
+                            <h3>Correlation t-test (14.1)</h3>
+                        </div>
+                        <div class="calc-grid">
+                            <div class="calc-field"><label>Sample correlation r</label><input type="number" id="cr-r" step="any" placeholder="e.g. 0.777"></div>
+                            <div class="calc-field"><label>Sample size n</label><input type="number" id="cr-n" placeholder="e.g. 36"></div>
+                        </div>
+                        <button class="calc-btn" onclick="calcCorrTest()">Calculate ↓</button>
+                        <div class="calc-output" id="cr-out"></div>
                     </div>
                 </div>
             </div>
@@ -3858,7 +3939,7 @@ Reject if T ≤ critical value</div>
         // ═══════════════════════════════════════════════
         // QUIZ + PERSISTENCE
         // ═══════════════════════════════════════════════
-        const quizTotals = { 'ch89': 3, 'ch10': 3, 'ch11': 2, 'ch12': 3, 'ch13': 4, 'ch1415': 4, 'ch20': 3 };
+        const quizTotals = { 'ch89': 3, 'ch10': 3, 'ch11': 2, 'ch12': 3, 'ch13': 4, 'ch1415': 6, 'ch20': 3 };
         const quizScores = JSON.parse(localStorage.getItem('ma214-scores') || '{}');
         Object.keys(quizTotals).forEach(k => { if (!quizScores[k]) quizScores[k] = 0; });
         let wrongAnswers = JSON.parse(localStorage.getItem('ma214-wrong') || '[]');
@@ -4321,6 +4402,32 @@ Reject if T ≤ critical value</div>
                 `  Error:      df=${dfE}, MS=${mse.toFixed(4)}\n\n` +
                 `→ R² = ${(R2 * 100).toFixed(1)}% of variation in y explained by the model.\n` +
                 `→ Use Adj R² (${adjR2.toFixed(4)}) when comparing models.`
+            );
+        }
+
+        function calcCorrTest() {
+            const r = parseFloat(document.getElementById('cr-r').value);
+            const n = parseFloat(document.getElementById('cr-n').value);
+            if (isNaN(r) || isNaN(n)) return alert('Fill in both fields');
+            if (Math.abs(r) >= 1) return alert('r must be between −1 and 1 (exclusive)');
+            if (n < 3) return alert('n must be at least 3');
+            const df = n - 2;
+            const t = r * Math.sqrt(df) / Math.sqrt(1 - r * r);
+            showOut('cr-out',
+                `Correlation t-test:\n\n` +
+                `  H₀: ρ = 0    Hₐ: ρ ≠ 0  (two-tailed; adjust sign for one-tailed)\n\n` +
+                `  Step 1 — compute 1 − r²:\n` +
+                `    1 − r² = 1 − (${r})² = 1 − ${(r*r).toFixed(6)} = ${(1 - r*r).toFixed(6)}\n\n` +
+                `  Step 2 — test statistic:\n` +
+                `    t = r × √(n−2) / √(1−r²)\n` +
+                `      = ${r} × √${df} / √${(1 - r*r).toFixed(6)}\n` +
+                `      = ${r} × ${Math.sqrt(df).toFixed(4)} / ${Math.sqrt(1 - r*r).toFixed(4)}\n` +
+                `      = ${(r * Math.sqrt(df)).toFixed(4)} / ${Math.sqrt(1 - r*r).toFixed(4)}\n` +
+                `      = ${t.toFixed(4)}\n\n` +
+                `  Step 3 — degrees of freedom:\n` +
+                `    df = n − 2 = ${n} − 2 = ${df}\n\n` +
+                `→ Compare |t| = ${Math.abs(t).toFixed(4)} to t(α/2, ${df}) from t-table.\n` +
+                `→ If |t| > critical value: reject H₀ → significant linear relationship.`
             );
         }
 
