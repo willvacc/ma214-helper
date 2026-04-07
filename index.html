@@ -2026,6 +2026,8 @@
                         <button class="tab-btn" onclick="swTab('ch1415','concepts',this)">Concepts</button>
                         <button class="tab-btn" onclick="swTab('ch1415','formulas',this)">Formulas</button>
                         <button class="tab-btn" onclick="swTab('ch1415','worked',this)">Reading Output</button>
+                        <button class="tab-btn" onclick="swTab('ch1415','multiple',this)">14.3 Multiple Reg</button>
+                        <button class="tab-btn" onclick="swTab('ch1415','gof',this)">14.4 Goodness of Fit</button>
                         <button class="tab-btn" onclick="swTab('ch1415','quiz',this)">Quiz</button>
                     </div>
                 </div>
@@ -2182,11 +2184,109 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 14.3 MULTIPLE REGRESSION -->
+                    <div class="pane" id="ch1415-multiple">
+                        <div class="card">
+                            <h3>The model</h3>
+                            <p>Sample: <strong style="color:var(--green)">ŷ = b₀ + b₁x₁ + b₂x₂ + ... + bₖxₖ</strong></p>
+                            <p style="margin-top:6px">Population: <strong>y = β₀ + β₁x₁ + β₂x₂ + ... + βₖxₖ + ε</strong></p>
+                        </div>
+                        <div class="hl" style="margin-top:12px">
+                            <p><strong>Key rule:</strong> Each bᵢ = change in ŷ for a 1-unit increase in xᵢ, <strong>HOLDING ALL OTHER VARIABLES CONSTANT.</strong> Always include that phrase when interpreting any coefficient in multiple regression.</p>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Arlington Houses Example — 3 predictors</h3>
+                            <p style="margin-bottom:8px">R: <code>lm(Price ~ Sqft + Beds + Baths, data=Arlington_Houses)</code></p>
+                        </div>
+                        <div class="formula"><span class="cm">model:</span>  ŷ = 153,348 + 96·SqFt + 557·Beds + 92,023·Baths
+
+<span class="cm">Coefficients table:</span>
+  Intercept   153,348   p = 0.0114   <span class="val">significant</span>
+  SqFt             96   p = 0.0108   <span class="val">significant</span>
+  Beds            557   p = 0.978    <span style="color:var(--red)">NOT significant</span>
+  Baths        92,023   p = 0.0009   <span class="val">significant</span>
+
+<span class="cm">Note:</span>  Beds is NOT significant — dropping it actually improves the model.</div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Example questions</h3>
+                            <div class="step">
+                                <div class="step-num">(a)</div>
+                                <div class="step-body">
+                                    <p><strong>Predict price for 2000 sqft, 3 beds, 2 baths:</strong></p>
+                                    <p style="margin-top:4px">ŷ = 153,348 + 96(2000) + 557(3) + 92,023(2)</p>
+                                    <p>= 153,348 + 192,000 + 1,671 + 184,046 = <strong style="color:var(--green)">$531,065</strong></p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">(b)</div>
+                                <div class="step-body">
+                                    <p><strong>Interpret Baths coefficient:</strong></p>
+                                    <p style="margin-top:4px">"Holding all other predictors constant, for each additional bathroom, predicted house price increases by $92,023."</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">(c)</div>
+                                <div class="step-body">
+                                    <p><strong>Two houses: same beds and baths, but one is 200 sqft bigger. Price difference?</strong></p>
+                                    <p style="margin-top:4px">96 × 200 = <strong style="color:var(--green)">$19,200</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 14.4 GOODNESS OF FIT -->
+                    <div class="pane" id="ch1415-gof">
+                        <div class="card">
+                            <h3>Three measures of model fit (computed by R)</h3>
+                        </div>
+                        <div class="grid2" style="margin-top:12px">
+                            <div class="card">
+                                <h3 style="color:var(--green)">1. R² — Coefficient of Determination</h3>
+                                <p>R² = SSR / SST = 1 − SSE/SST</p>
+                                <p style="margin-top:6px">Range 0 to 1. Proportion of variation in y explained by model.</p>
+                                <p style="margin-top:6px">R²=1: perfect fit. R²=0: no fit.</p>
+                                <div class="hl" style="margin-top:8px"><p><strong>ALWAYS increases when you add predictors.</strong> Do NOT use alone to compare models with different numbers of predictors.</p></div>
+                            </div>
+                            <div class="card">
+                                <h3 style="color:var(--amber)">2. sₑ — Standard Error of the Estimate</h3>
+                                <p>sₑ = √(SSE / (n−k−1)) = √MSE</p>
+                                <p style="margin-top:6px">Smaller = better fit. Average residual size in original units.</p>
+                                <div class="hl" style="margin-top:8px"><p>Use to compare models with the <strong>same</strong> number of predictors.</p></div>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3 style="color:var(--purple)">3. Adjusted R²</h3>
+                            <p>Adj R² = 1 − (1−R²) × (n−1)/(n−k−1)</p>
+                            <p style="margin-top:6px">Penalizes for adding useless predictors. <strong>USE THIS to compare models with DIFFERENT numbers of predictors.</strong></p>
+                        </div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>ANOVA table for regression</h3>
+                        </div>
+                        <div class="formula"><span class="cm">Source      </span>  df      SS    MS              F
+<span class="cm">Regression  </span>  k       SSR   MSR = SSR/k     MSR/MSE
+<span class="cm">Residual    </span>  n−k−1   SSE   MSE = SSE/(n−k−1)   —
+<span class="cm">Total       </span>  n−1     SST   —               —
+
+<span class="cm">n = sample size,  k = number of predictors</span></div>
+                        <div class="card" style="margin-top:12px">
+                            <h3>Model comparison — Arlington houses (n=36)</h3>
+                        </div>
+                        <div class="formula"><span class="cm">Model</span>  Predictors              R²      Adj R²  sₑ
+  1      SqFt only              0.6038  0.5921  87,110
+  2      SqFt + Beds            0.6068  0.5830  88,080
+  3      SqFt + Beds + Baths    0.7237  0.6978  74,980
+  4      Beds + Baths           0.6604  0.6398  81,860
+  5      SqFt + Baths           0.7237  0.7069  73,840  <span class="val">← BEST</span>
+
+<span class="cm">Model 5 wins:</span>  highest Adj R² AND lowest sₑ.
+<span class="cm">Why:</span>  Beds was not significant — removing it improved the model.</div>
+                    </div>
+
                     <div class="pane" id="ch1415-quiz">
                         <div class="quiz-wrap">
                             <div class="quiz-score">
                                 <div>
-                                    <div class="score-num" id="ch1415-score">0/6</div>
+                                    <div class="score-num" id="ch1415-score">0/10</div>
                                     <div class="score-label">correct</div>
                                 </div><button class="reset-btn" onclick="resetQuiz('ch1415')">Reset</button>
                             </div>
@@ -2253,6 +2353,42 @@
                                         onclick="ck('ch1415-q6',this,'no','Check: t = r√(n−2)/√(1−r²). n−2=25, 1−r²=0.64.')">t ≈ 2.50</button><button
                                         onclick="ck('ch1415-q6',this,'no','Don\'t forget to take the square root of (1−r²).')">t ≈ 1.44</button></div>
                                 <div class="q-fb" id="ch1415-q6-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q7">
+                                <div class="q-num">Q7</div>
+                                <div class="q-text">Multiple regression model: ŷ = 153,348 + 96·SqFt + 557·Beds + 92,023·Baths. How do you interpret the Baths coefficient?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q7',this,'ok','Correct!')">Holding SqFt and Beds constant, each additional bathroom increases predicted price by $92,023</button><button
+                                        onclick="ck('ch1415-q7',this,'no','Must say &quot;holding all other variables constant&quot; in multiple regression.')">For each additional bathroom, price increases by $92,023</button><button
+                                        onclick="ck('ch1415-q7',this,'no','This is association, not causation. Also missing &quot;holding others constant.&quot;')">Baths causes price to increase by $92,023</button></div>
+                                <div class="q-fb" id="ch1415-q7-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q8">
+                                <div class="q-num">Q8</div>
+                                <div class="q-text">Two models: Model A has R²=0.81 with 3 predictors. Model B has R²=0.79 with 1 predictor. Which is better and why?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q8',this,'no','R² always increases with more predictors. Use Adjusted R² to compare models with different numbers of predictors.')">Model A — it has higher R²</button><button
+                                        onclick="ck('ch1415-q8',this,'ok','Correct! R² always increases with more predictors — use Adjusted R² for a fair comparison.')">Cannot determine from R² alone — use Adjusted R² to compare models with different numbers of predictors</button><button
+                                        onclick="ck('ch1415-q8',this,'no','Not always — but you do need Adjusted R² to make a fair comparison.')">Model B — fewer predictors is always better</button></div>
+                                <div class="q-fb" id="ch1415-q8-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q9">
+                                <div class="q-num">Q9</div>
+                                <div class="q-text">In the Arlington model (n=36, k=3 predictors), what is the df for the Residual (Error) in the ANOVA table?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q9',this,'no','df_Error = n−k−1 = 36−3−1 = 32, not 33.')">33</button><button
+                                        onclick="ck('ch1415-q9',this,'ok','Correct! df_Error = n−k−1 = 36−3−1 = 32.')">32</button><button
+                                        onclick="ck('ch1415-q9',this,'no','35 is df_Total = n−1. Error df = n−k−1.')">35</button></div>
+                                <div class="q-fb" id="ch1415-q9-fb"></div>
+                            </div>
+                            <div class="q-item" id="ch1415-q10">
+                                <div class="q-num">Q10</div>
+                                <div class="q-text">sₑ for Model A = 74,980. sₑ for Model B = 81,860. Which model fits better?</div>
+                                <div class="q-opts"><button
+                                        onclick="ck('ch1415-q10',this,'ok','Correct! Smaller sₑ = better fit. sₑ measures average residual size.')">Model A — smaller sₑ means residuals are closer to zero on average</button><button
+                                        onclick="ck('ch1415-q10',this,'no','Smaller sₑ = better fit. sₑ measures average residual size — you want it small.')">Model B — higher sₑ means more variation explained</button><button
+                                        onclick="ck('ch1415-q10',this,'no','sₑ alone can compare fit. Smaller = better.')">Cannot tell without R²</button></div>
+                                <div class="q-fb" id="ch1415-q10-fb"></div>
                             </div>
                         </div>
                     </div>
@@ -2537,11 +2673,18 @@
                                 <td>13.4</td>
                             </tr>
                             <tr>
-                                <td>Linear relationship?</td>
-                                <td>Regression t-test (slope)</td>
+                                <td>Linear relationship? (correlation)</td>
+                                <td>Correlation t-test OR Regression slope t-test</td>
                                 <td>t</td>
                                 <td>n−2</td>
-                                <td>14</td>
+                                <td>14.1</td>
+                            </tr>
+                            <tr>
+                                <td>Compare regression models</td>
+                                <td>Use Adjusted R² (different # predictors) or sₑ (same # predictors)</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>14.4</td>
                             </tr>
                             <tr>
                                 <td>2 groups, non-normal, independent</td>
@@ -2797,6 +2940,24 @@
                                     <div class="formula"><span class="cm">CI for mean response (narrower):</span>  ŷ  ±  t × s_e × √( 1/n + (x*−x̄)²/SS_xx )</div>
                                     <div class="formula"><span class="cm">PI for individual obs (wider):  </span>  ŷ  ±  t × s_e × √( 1 + 1/n + (x*−x̄)²/SS_xx )</div>
                                     <div class="formula"><span class="cm">key difference:</span>  PI adds "+1" under the radical → always wider than the CI at same x*</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Multiple Regression</div>
+                                <div class="fgroup">
+                                    <div class="formula">ŷ = b₀ + b₁x₁ + b₂x₂ + ... + bₖxₖ</div>
+                                    <div class="formula"><span class="cm">each bᵢ:</span>  change in ŷ per 1-unit increase in xᵢ, holding all others constant</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">Goodness of Fit</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">R²:     </span>  R² = SSR/SST = 1 − SSE/SST</div>
+                                    <div class="formula"><span class="cm">Adj R²: </span>  1 − (1−R²) × (n−1)/(n−k−1)</div>
+                                    <div class="formula"><span class="cm">sₑ:     </span>  √(SSE/(n−k−1)) = √MSE     [k = number of predictors]</div>
+                                </div>
+                                <div class="flabel" style="margin-top:10px">ANOVA Table for Regression</div>
+                                <div class="fgroup">
+                                    <div class="formula"><span class="cm">Source      </span>  df      SS    MS           F
+<span class="cm">Regression  </span>  k       SSR   MSR=SSR/k    F=MSR/MSE
+<span class="cm">Residual    </span>  n−k−1   SSE   MSE=SSE/df   —
+<span class="cm">Total       </span>  n−1     SST   —            —</div>
                                 </div>
                             </div>
                         </div>
@@ -3646,6 +3807,12 @@ Reject if T ≤ critical value</div>
                                 <td>14–15</td>
                             </tr>
                             <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">Adj R²</td>
+                                <td>Adjusted coefficient of determination</td>
+                                <td>Penalizes R² for each additional predictor. Use to compare models with different numbers of predictors. Formula: 1 − (1−R²)(n−1)/(n−k−1)</td>
+                                <td>14–15</td>
+                            </tr>
+                            <tr class="grow">
                                 <td style="font-family:var(--mono);color:var(--purple)">r</td>
                                 <td>Correlation coefficient</td>
                                 <td>Measures direction and strength of linear relationship. Range −1 to +1. r² = R². Don't confuse
@@ -3661,6 +3828,13 @@ Reject if T ≤ critical value</div>
                                 <td>14.1</td>
                             </tr>
             
+                            <tr class="grow">
+                                <td style="font-family:var(--mono);color:var(--purple)">k</td>
+                                <td>Number of predictors (regression)</td>
+                                <td>In multiple regression. df_Error = n−k−1. Different from k=groups in ANOVA.</td>
+                                <td>14–15</td>
+                            </tr>
+
                             <!-- Chi-square / nonpara -->
                             <tr class="grow">
                                 <td style="font-family:var(--mono);color:var(--red)">O</td>
@@ -3804,7 +3978,7 @@ Reject if T ≤ critical value</div>
                             <tr>
                                 <td>Multiple regression — Error</td>
                                 <td>n − k − 1</td>
-                                <td>k = number of predictors, not groups</td>
+                                <td>k = number of PREDICTORS (not groups). Regression ANOVA: df_Regression=k, df_Error=n−k−1</td>
                             </tr>
                             <tr>
                                 <td>Kruskal-Wallis</td>
@@ -3947,7 +4121,7 @@ Reject if T ≤ critical value</div>
         // ═══════════════════════════════════════════════
         // QUIZ + PERSISTENCE
         // ═══════════════════════════════════════════════
-        const quizTotals = { 'ch89': 3, 'ch10': 3, 'ch11': 2, 'ch12': 3, 'ch13': 4, 'ch1415': 6, 'ch20': 3 };
+        const quizTotals = { 'ch89': 3, 'ch10': 3, 'ch11': 2, 'ch12': 3, 'ch13': 4, 'ch1415': 10, 'ch20': 3 };
         const quizScores = JSON.parse(localStorage.getItem('ma214-scores') || '{}');
         Object.keys(quizTotals).forEach(k => { if (!quizScores[k]) quizScores[k] = 0; });
         let wrongAnswers = JSON.parse(localStorage.getItem('ma214-wrong') || '[]');
@@ -3972,6 +4146,12 @@ Reject if T ≤ critical value</div>
             'ch1415-q2': { ch: 'Ch 14–15', text: '18 df for error in simple regression. n=?', correct: '20' },
             'ch1415-q3': { ch: 'Ch 14–15', text: 'Comparing 3 models with different # predictors. Which metric?', correct: 'Adjusted R²' },
             'ch1415-q4': { ch: 'Ch 14–15', text: 'PI vs CI at x=25. Which is wider?', correct: 'Prediction interval' },
+            'ch1415-q5': { ch: 'Ch 14–15', text: 'Test for positive linear relationship. Correct hypotheses?', correct: 'H₀: ρ ≤ 0, Hₐ: ρ > 0' },
+            'ch1415-q6': { ch: 'Ch 14–15', text: 'r=0.6, n=27. Correlation t statistic?', correct: 't ≈ 3.75' },
+            'ch1415-q7': { ch: 'Ch 14–15', text: 'Interpret Baths coefficient in multiple regression', correct: 'Holding SqFt and Beds constant, each additional bathroom increases predicted price by $92,023' },
+            'ch1415-q8': { ch: 'Ch 14–15', text: 'Model A: R²=0.81, 3 predictors. Model B: R²=0.79, 1 predictor. Which is better?', correct: 'Cannot determine from R² alone — use Adjusted R²' },
+            'ch1415-q9': { ch: 'Ch 14–15', text: 'Arlington model n=36, k=3. Residual df?', correct: '32' },
+            'ch1415-q10': { ch: 'Ch 14–15', text: 'sₑ Model A=74,980. sₑ Model B=81,860. Which fits better?', correct: 'Model A — smaller sₑ' },
             'ch20-q1': { ch: 'Ch 20', text: 'Small sample, non-normal, 2 independent groups. Which test?', correct: 'Wilcoxon Rank-Sum test' },
             'ch20-q2': { ch: 'Ch 20', text: 'Kruskal-Wallis k=5. df?', correct: '4' },
             'ch20-q3': { ch: 'Ch 20', text: 'Wilcoxon Signed-Rank: what to do with dᵢ=0?', correct: 'Drop them entirely' },
@@ -4081,6 +4261,10 @@ Reject if T ≤ critical value</div>
             { ch: 'ch1415', front: 'R² — coefficient of determination', back: `R² = SSR / SST = 1 − SSE/SST\n\nRange: 0 to 1\n"% of variation in y explained by model"\n\nAlways increases when you add predictors.\nUse Adjusted R² to compare models.`, note: 'r² = R² for simple regression. r = √R².' },
             { ch: 'ch1415', front: 't-test for regression slope', back: `H₀: β₁=0  (no linear relationship)\nHₐ: β₁≠0\n\nt = b₁ / s_b₁\ndf = n − 2      (simple)\ndf = n − k − 1  (multiple, k predictors)`, note: 'p < α → slope significant → x is useful predictor.' },
             { ch: 'ch1415', front: 'Prediction interval vs Confidence interval', back: `CI for mean y at x*: narrower\n  → uncertainty in the LINE only\n\nPI for individual y at x*: always WIDER\n  → line uncertainty + individual variability\n\nBoth widen as x moves away from x̄.`, note: 'Exam often asks which is wider — always prediction.' },
+            { ch: 'ch1415', front: 'Multiple regression model — equation and key rule', back: `ŷ = b₀ + b₁x₁ + b₂x₂ + ... + bₖxₖ\n\nEach bᵢ = change in ŷ for 1-unit increase in xᵢ\nHOLDING ALL OTHER VARIABLES CONSTANT\n\nPopulation: y = β₀ + β₁x₁ + ... + βₖxₖ + ε`, note: 'Always say "holding all other predictors constant" when interpreting any coefficient.' },
+            { ch: 'ch1415', front: 'R² vs Adjusted R² — when to use each', back: `R² = SSR/SST\n  → Use for single model interpretation\n  → ALWAYS increases when you add predictors\n\nAdj R² = 1 − (1−R²)(n−1)/(n−k−1)\n  → Use to COMPARE models with different # of predictors\n  → Penalizes for adding useless variables`, note: 'Adding Beds to the Arlington model raised R² but LOWERED Adj R² → Beds hurt the model.' },
+            { ch: 'ch1415', front: 'Standard error of estimate sₑ — what it measures', back: `sₑ = √(SSE / (n−k−1)) = √MSE\n\n  → Average size of residuals in original units\n  → Smaller = better fit\n  → 0 = perfect fit\n  → Use to compare models with SAME # predictors\n  → For different # predictors: use Adj R²`, note: 'sₑ has units. R² is unitless. Both matter for model comparison.' },
+            { ch: 'ch1415', front: 'ANOVA table for regression — df formulas', back: `Source     | df\nRegression | k          (k = # predictors)\nResidual   | n − k − 1\nTotal      | n − 1\n\nSST = SSR + SSE  (always)\nMSR = SSR/k\nMSE = SSE/(n−k−1) = sₑ²`, note: 'df_Error = n−k−1. For simple regression k=1, so df_Error = n−2.' },
             { ch: 'ch20', front: 'Wilcoxon Rank-Sum — procedure', back: `Alt to two-sample t-test (independent groups).\n\n1. Combine n₁+n₂ obs, rank ALL together\n2. T = sum of ranks for SMALLER sample\n3. Compare T to Wilcoxon table\n\nH₀: Populations identical`, note: 'Tied values get average ranks.' },
             { ch: 'ch20', front: 'Wilcoxon Signed-Rank — procedure', back: `Alt to paired t-test.\n\n1. dᵢ = x₁ᵢ − x₂ᵢ\n2. Drop zeros\n3. Rank |dᵢ|\n4. Assign + or − from sign of dᵢ\n5. T⁺=sum(+ranks), T⁻=sum(−ranks)\n6. T=min(T⁺,T⁻) → Wilcoxon table`, note: 'Zero differences dropped — effective n decreases.' },
             { ch: 'ch20', front: 'Kruskal-Wallis — formula and distribution', back: `H = [12/n(n+1)] × Σ(Rⱼ²/nⱼ) − 3(n+1)\n\nH ~ χ²  with df = k − 1\nk = number of groups\n\nUses chi-square table (NOT Wilcoxon table)`, note: 'Only non-parametric test here that uses chi-square.' },
